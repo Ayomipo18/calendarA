@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  calendarb:
+    environment:
+      - NODE_ENV=development
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./:/app
+    container_name: calendarb
+    expose:
+      - '3000'
+    ports:
+      - '3000:3000'
+    command: npm run dev
