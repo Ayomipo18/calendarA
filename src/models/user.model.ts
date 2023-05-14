@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
-import { IUser } from '../interfaces/user.interface'
+import { User } from './interfaces/iuser.model'
 
-const userSchema = new Schema<IUser>({
+const userSchema = new Schema<User>({
     google_id: {
         type: String,
         required: true
@@ -20,6 +20,6 @@ const userSchema = new Schema<IUser>({
     }
 })
 
-const UserModel = model<IUser>('User', userSchema)
+const UserModel = model<User>('User', userSchema)
 
 export default UserModel

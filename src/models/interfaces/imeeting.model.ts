@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 
-export interface IMeeting {
+export class Meeting {
     google_calendar_id: string
     google_event_id: string
     event_title: string;

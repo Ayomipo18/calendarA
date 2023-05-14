@@ -1,4 +1,4 @@
-export interface IUser {
+export class User {
     google_id: string;
     name: string;
     email: string;

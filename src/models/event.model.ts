@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
-import { IEvent } from '../interfaces/event.interface'
+import { Event} from './interfaces/ievent.model'
 
-const eventSchema = new Schema<IEvent>({
+const eventSchema = new  Schema<Event>({
     user_id: {
         type: Schema.Types.ObjectId,
         required: true,
@@ -21,6 +21,6 @@ const eventSchema = new Schema<IEvent>({
     }
 })
 
-const EventModel = model<IEvent>('Event', eventSchema)
+const EventModel = model<Event>('Event', eventSchema)
 
 export default EventModel

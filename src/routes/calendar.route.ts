@@ -1,19 +1,18 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import 'reflect-metadata';
+import container from '../ioc/inversify.config';
+import { Router } from 'express';
 import CalendarController from '../controllers/calendar.controller';
-import successResponse from '../helpers/successResponse'
 import validate from '../validators';
 import { calendarSchema } from '../validators/calendar.validator';
 
+const calendarController: CalendarController = container.resolve(CalendarController);
+
 const calendarRouter = Router();
 
-calendarRouter.get('/:user_id', validate(calendarSchema), async(req: Request, res: Response, next: NextFunction) => {
-    try {
-        const calendarController = new CalendarController();
-        const response = await calendarController.getCalendar(req.params.user_id, req.query.date);
-        return successResponse(res, 200, 'Calendar returned Successfully', response)
-    } catch(error) {
-        next(error);
-    }
-})
+calendarRouter.get(
+    '/:userId', 
+    validate(calendarSchema), 
+    calendarController.getCalendar.bind(calendarController)
+);
 
 export default calendarRouter

@@ -6,6 +6,9 @@ import { oauth2Client, profileURL } from '../config/config'
 import { duration_in_mins, start_time, end_time } from '../helpers/constants'
 
 export class AuthService {
+    private _user = User;
+    private _event = Event;
+
     public async authorize(): Promise<any> {
         try {
             // Access scopes for read/write google user email, profile and calendar activity.
@@ -27,26 +30,26 @@ export class AuthService {
     }
 
     public async getGoogleUser(code: any): Promise<any> {
-        if (!code) { 
+        if (!code) {
             throw new HttpException(401, 'You are not authorized to access this endpoint.');
         };
 
         const googleUser = await this.getGUser(code);
         const { id, email, name } = googleUser.data;
 
-        let user = await User.findOne({email})
+        let user = await this._user.findOne({email})
 
         let event
         
         if (!user) {
-            user = await User.create({
+            user = await this._user.create({
                 google_id: id,
                 name: name,
                 email: email,
                 refresh_token: googleUser.refresh_token
             })
 
-            event = await Event.create({
+            event = await this._event.create({
                 duration_in_mins: duration_in_mins,
                 start_time: start_time,
                 end_time: end_time,
@@ -54,7 +57,7 @@ export class AuthService {
             })
         }
 
-        if (!event) event = await Event.findOne({user_id: user._id})
+        if (!event) event = await this._event.findOne({user_id: user._id})
 
         return { 
             name: user.name, 

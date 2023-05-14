@@ -1,0 +1,257 @@
+tags:
+- name: videos
+  description: videos API
+
+- name: channel
+  description: channel API
+
+paths:
+  /api/v1/videos:
+    # [GET] videos
+    get:
+      tags:
+      - videos
+      summary: Find All Videos
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+
+    # [POST] videos
+    post:
+      tags:
+      - videos
+      summary: Add Video
+      parameters:
+      - name: body
+        in: body
+        description: video Data
+        required: true
+        schema:
+          $ref: '#/definitions/videos'
+      responses:
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [GET] videos/id
+  /api/v1/videos/{id}:
+    get:
+      tags:
+      - videos
+      summary: Find Video By Id
+      parameters:
+      - name: id
+        in: path
+        description: Video Id
+        required: true
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [PUT] videos/id
+    put:
+      tags:
+      - videos
+      summary: Update Video By Id
+      parameters:
+      - name: id
+        in: path
+        description: video Id
+        required: true
+      - name: body
+        in: body
+        description: video Data
+        required: true
+        schema:
+          $ref: '#/definitions/videos'
+      responses:
+        200:
+          description: 'OK'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [DELETE] videos/id
+    delete:
+      tags:
+      - videos
+      summary: Delete Video By Id
+      parameters:
+      - name: id
+        in: path
+        description: video Id
+        required: true
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+  /api/v1/channels:
+    # [GET] channels
+    get:
+      tags:
+        - channels
+      summary: Find All Channels
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+
+    # [POST] channels
+    post:
+      tags:
+        - channels
+      summary: Add Channel
+      parameters:
+        - name: body
+          in: body
+          description: channel Data
+          required: true
+          schema:
+            $ref: '#/definitions/channels'
+      responses:
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+  # [GET] channels/id
+  /api/v1/channels/{id}:
+    get:
+      tags:
+        - channels
+      summary: Find Channel By Id
+      parameters:
+        - name: id
+          in: path
+          description: Channel Id
+          required: true
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+    # [PUT] channels/id
+    put:
+      tags:
+        - channels
+      summary: Update Channel By Id
+      parameters:
+        - name: id
+          in: path
+          description: channel Id
+          required: true
+        - name: body
+          in: body
+          description: channel Data
+          required: true
+          schema:
+            $ref: '#/definitions/channels'
+      responses:
+        200:
+          description: 'OK'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+    # [DELETE] channels/id
+    delete:
+      tags:
+        - channels
+      summary: Delete Channel By Id
+      parameters:
+        - name: id
+          in: path
+          description: channel Id
+          required: true
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# definitions
+definitions:
+  videos:
+    type: object
+    required:
+        - title
+        - url
+        - accessType
+        - size
+        - ownerId
+        - channelId
+    properties:
+      title:
+        type: string
+        description: video title
+      url:
+        type: string
+        description: video url
+      accessType:
+        type: boolean
+        description: video access
+      size:
+        type: number
+        description: video size
+      ownerId:
+        type: string
+        description: video owner id
+      channelId:
+        type: string
+        description: channel id
+
+  channels:
+    type: object
+    required:
+      - title
+      - bannerUrl
+      - isPublic
+      - ownerId
+    properties:
+      title:
+        type: string
+        description: channel title
+      bannerUrl:
+        type: string
+        description: banner url
+      isPublic:
+        type: boolean
+        description: public access
+      ownerId:
+        type: string
+        description: video owner id
+
+schemes:
+ - https
+ - http

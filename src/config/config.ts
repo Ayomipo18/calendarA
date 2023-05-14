@@ -15,3 +15,5 @@ export const getOAuth2Client = (refresh_token: string) => {
 export const calendar = google.calendar('v3');
 
 export const profileURL = process.env.PROFILE_URL;
+
+export const swagger_url = process.env.SWAGGER_URL;

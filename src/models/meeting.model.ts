@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
-import { IMeeting } from '../interfaces/meeting.interface'
+import { Meeting } from './interfaces/imeeting.model'
 
-const meetingSchema = new Schema<IMeeting>({
+const meetingSchema = new Schema<Meeting>({
     google_calendar_id: {
         type: String,
         required: true
@@ -38,6 +38,6 @@ const meetingSchema = new Schema<IMeeting>({
     }
 })
 
-const MeetingModel = model<IMeeting>('Meeting', meetingSchema)
+const MeetingModel = model<Meeting>('Meeting', meetingSchema)
 
 export default MeetingModel

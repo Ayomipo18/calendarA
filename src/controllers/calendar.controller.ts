@@ -1,22 +1,24 @@
-import {
-    Body,
-    Controller,
-    Get,
-    Path,
-    Post,
-    Query,
-    Route,
-    Tags
-} from "tsoa";
+import { Request, Response, NextFunction } from 'express';
+import { injectable, inject } from "inversify";
+import TYPES from "../types";
+import IServiceManager from "../services/interfaces/iserviceManager";
+import { GetCalendarDTO } from "../dtos/CalendarDTO";
 
-import { CalendarService } from "../services/calendar.service";
+@injectable()
+export default class CalendarController {
+    private _service: IServiceManager;
 
-@Route('calendar')
-@Tags("Calendar")
-export default class AuthController extends Controller {
-    @Get('{userId}')
-    public async getCalendar(@Path() userId: string, @Query() date?: any): Promise<any>{
-        const calendarService = new CalendarService();
-        return await calendarService.getCalendar(userId, date);
+    constructor(@inject(TYPES.IServiceManager) service: IServiceManager) {
+        this._service = service;
+    }
+
+    public async getCalendar(req: Request, res: Response, next: NextFunction){
+        try {
+            const getCalendarDto: GetCalendarDTO = req.query;
+            const data = await this._service.Calendar.getCalendar(req.params.userId, getCalendarDto);
+            return res.status(200).json(data.data);
+        } catch (error) {
+            next(error);
+        }
     }
 }

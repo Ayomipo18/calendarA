@@ -1,27 +1,19 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import AuthController from '../controllers/auth.controller';
-import successResponse from '../helpers/successResponse'
+// import { Router } from 'express';
+// import AuthController from '../controllers/auth.controller';
 
-const authRouter = Router();
+// const authRouter = Router();
 
-authRouter.get('/google', async(req: Request, res: Response, next: NextFunction) => {
-    try {
-        const authController = new AuthController();
-        const googleAuthUrl = await authController.authorize();
-        return successResponse(res, 200, 'Paste this link in your browser to authorize CalendarA', googleAuthUrl)
-    } catch(error) {
-        next(error);
-    }
-})
+// const authController = new AuthController();
 
-authRouter.get('/google/callback', async(req: Request, res: Response, next: NextFunction ) => {
-    try {
-        const authController = new AuthController();
-        const response = await authController.getGoogleUser(req.query.code);
-        return successResponse(res, 200, 'Authorization Successful', response)
-    } catch(error) {
-        next(error);
-    }
-})
+// /**
+//  * @swagger
+//  * /users:
+//  *   get:
+//  *     summary: Retrieve a list of JSONPlaceholder users
+//  *     description: Retrieve a list of users from JSONPlaceholder. Can be used to populate a list of fake users when prototyping or testing an API.
+// */
+// authRouter.get('/google', authController.authorize);
 
-export default authRouter
+// authRouter.get('/google/callback', authController.getGoogleUser);
+
+// export default authRouter

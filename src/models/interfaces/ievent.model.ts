@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 
-export interface IEvent {
+export class Event {
     duration_in_mins: number;
     start_time: string;
     end_time: string;
