@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import container from '../ioc/inversify.config';
+import container from '../di/inversify.config';
 import { Router } from 'express';
 import CalendarController from '../controllers/calendar.controller';
 import validate from '../validators';

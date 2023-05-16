@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import lazyInject from "../ioc/decorators";
+import lazyInject from "../di/decorators";
 import IServiceManager from "./interfaces/iserviceManager";
 import ICalendarService from "./interfaces/icalendar.service";
 import TYPES from "../types";
