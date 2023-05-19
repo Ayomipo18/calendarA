@@ -1,9 +1,12 @@
 tags:
-- name: videos
-  description: videos API
+- name: Auth
+  description: Auth API
 
-- name: channel
-  description: channel API
+- name: Calendar
+  description: Calendar API
+
+- name: User
+  description: User API
 
 # paths:
 #   /api/v1/videos:
