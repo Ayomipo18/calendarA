@@ -1,19 +1,14 @@
-// import { Router } from 'express';
-// import AuthController from '../controllers/auth.controller';
+import 'reflect-metadata';
+import container from '../di/inversify.config';
+import { Router } from 'express';
+import AuthController from '../controllers/auth.controller';
 
-// const authRouter = Router();
+const authController: AuthController = container.resolve(AuthController);
 
-// const authController = new AuthController();
+const authRouter = Router();
 
-// /**
-//  * @swagger
-//  * /users:
-//  *   get:
-//  *     summary: Retrieve a list of JSONPlaceholder users
-//  *     description: Retrieve a list of users from JSONPlaceholder. Can be used to populate a list of fake users when prototyping or testing an API.
-// */
-// authRouter.get('/google', authController.authorize);
+authRouter.get('/google', authController.authorize.bind(authController));
 
-// authRouter.get('/google/callback', authController.getGoogleUser);
+authRouter.get('/google/callback', authController.getGoogleUser.bind(authController));
 
-// export default authRouter
+export default authRouter;

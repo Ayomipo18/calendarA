@@ -1,21 +1,21 @@
 import { Schema, model } from 'mongoose'
 import { Event} from './interfaces/ievent.model'
 
-const eventSchema = new  Schema<Event>({
-    user_id: {
+const eventSchema = new Schema<Event>({
+    userId: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: "User"
     },
-    start_time: {
+    startTime: {
         type: String,
         required: true
     },
-    end_time: {
+    endTime: {
         type: String,
         required: true
     },
-    duration_in_mins: {
+    durationInMins: {
         type: Number,
         required: true
     }

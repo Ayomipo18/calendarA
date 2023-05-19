@@ -1,13 +1,14 @@
 import { Types } from 'mongoose';
+import { Document } from "mongoose";
 
-export class Meeting {
-    google_calendar_id: string
-    google_event_id: string
-    event_title: string;
+export class Meeting extends Document {
+    googleCalendarId: string
+    googleEventId: string
+    eventTitle: string;
     description: string;
-    event_date: Date;
-    start_time: Date;
-    end_time: Date;
-    host_id: Types.ObjectId;
-    attendee_id: Types.ObjectId;
+    eventDate: Date;
+    startTime: Date;
+    endTime: Date;
+    hostId: Types.ObjectId;
+    attendeeId: Types.ObjectId;
 }

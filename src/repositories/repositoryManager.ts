@@ -1,24 +1,25 @@
 import { injectable } from "inversify";
 import lazyInject from "../di/decorators";
-import ICalendarRepository from "./interfaces/icalendar.repository";
 import IRepositoryManager from "./interfaces/irepositoryManager";
+import IUserRepository from "./interfaces/iuser.repository";
+import IEventRepository from "./interfaces/ievent.repository";
 import TYPES from "../types";
 
 @injectable()
 export default class RepositoryManager implements IRepositoryManager{
 
-    @lazyInject(TYPES.ICalendarRepository)
-    private _calendarRepository: ICalendarRepository;
-    // private _calendarRepository: ICalendarRepository;
+    @lazyInject(TYPES.IUserRepository)
+    private _userRepository: IUserRepository;
 
-    // constructor(@inject(TYPES.ICalendaryRepository) calendarRepository: ICalendarRepository) {
-    //     this._calendarRepository = calendarRepository
-    // }
+    @lazyInject(TYPES.IEventRepository)
+    private _eventRepository: IEventRepository;
 
-    //public calendar: ICalendarRepository = this._calendarRepository;
+    public get User (): IUserRepository {
+        return this._userRepository;
+    }
 
-    public get Calendar (): ICalendarRepository {
-        return this._calendarRepository;
+    public get Event (): IEventRepository {
+        return this._eventRepository;
     }
 
 }

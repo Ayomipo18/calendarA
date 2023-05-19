@@ -1,25 +1,33 @@
-// import { AuthService } from "../services/auth.service";
-// import { Request, Response, NextFunction } from 'express';
-// import successResponse from '../helpers/successResponse'
+import { Request, Response, NextFunction } from 'express';
+import IServiceManager from '../services/interfaces/iserviceManager';
+import { injectable, inject } from "inversify";
+import TYPES from "../types";
+import { AuthDTO } from '../dtos/AuthDTO';
 
-// export default class AuthController {
-//     private _authService = new AuthService();
+@injectable()
+export default class AuthController {
+    private _service: IServiceManager;
 
-//     public async authorize(req: Request, res: Response, next: NextFunction): Promise<any>{
-//         try {
-//             const googleAuthUrl = await this._authService.authorize();
-//             return successResponse(res, 200, 'Paste this link in your browser to authorize CalendarA', googleAuthUrl)
-//         } catch(error) {
-//             next(error);
-//         }
-//     }
+    constructor(@inject(TYPES.IServiceManager) service: IServiceManager) {
+        this._service = service;
+    }
 
-//     public async getGoogleUser(req: Request, res: Response, next: NextFunction): Promise<any> {
-//         try {
-//             const data = await this._authService.getGoogleUser(req.query.code);
-//             return successResponse(res, 200, 'Authorization Successful', data);
-//         }catch (error) {
-//             next(error);
-//         }
-//     }
-// }
+    public async authorize(req: Request, res: Response, next: NextFunction): Promise<any>{
+        try {
+            const data = await this._service.Auth.authorize();
+            return res.status(200).json(data.data);
+        } catch(error) {
+            next(error);
+        }
+    }
+
+    public async getGoogleUser(req: Request, res: Response, next: NextFunction): Promise<any> {
+        try {
+            const code: AuthDTO = req.query;
+            const data = await this._service.Auth.getGoogleUser(code);
+            return res.status(200).json(data.data);
+        }catch (error) {
+            next(error);
+        }
+    }
+}

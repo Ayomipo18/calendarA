@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose'
 import { User } from './interfaces/iuser.model'
 
 const userSchema = new Schema<User>({
-    google_id: {
+    googleId: {
         type: String,
         required: true
     },
@@ -14,7 +14,7 @@ const userSchema = new Schema<User>({
         type: String,
         required: true
     },
-    refresh_token: {
+    refreshToken: {
         type: String,
         required: true
     }

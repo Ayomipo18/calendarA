@@ -2,36 +2,36 @@ import { Schema, model } from 'mongoose'
 import { Meeting } from './interfaces/imeeting.model'
 
 const meetingSchema = new Schema<Meeting>({
-    google_calendar_id: {
+    googleCalendarId: {
         type: String,
         required: true
     },
-    google_event_id: {
+    googleEventId: {
         type: String,
         required: true
     },
-    event_title: {
+    eventTitle: {
         type: String,
         required: true
     },
-    event_date: {
+    eventDate: {
         type: Date,
         required: true
     },
-    start_time: {
+    startTime: {
         type: Date,
         required: true
     },
-    end_time: {
+    endTime: {
         type: Date,
         required: true
     },
-    host_id: {
+    hostId: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: "User"
     },
-    attendee_id: {
+    attendeeId: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: "User"

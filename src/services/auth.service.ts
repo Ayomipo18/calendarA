@@ -1,15 +1,27 @@
-import User from '../models/user.model'
-import Event from '../models/event.model'
+import IRepositoryManager from '../repositories/interfaces/irepositoryManager';
+import IAuthService from './interfaces/iauth.service';
 import axios from 'axios';
+import { injectable, inject } from "inversify";
+import TYPES from '../types';
+import SuccessResponse from '../helpers/SuccessResponse';
+import logger from "../logger";
 import { HttpException } from '../exceptions/HttpException'
 import { oauth2Client, profileURL } from '../config/config'
-import { duration_in_mins, start_time, end_time } from '../helpers/constants'
+import { durationInMins, startTime, endTime } from '../helpers/constants'
+import { GetGoogleUser, UserLoginResponse } from '../dtos/UserDTO';
+import { mapper } from '../mappings/mapper';
+import { User } from '../models/interfaces/iuser.model';
+import { AuthDTO } from '../dtos/AuthDTO';
 
-export class AuthService {
-    private _user = User;
-    private _event = Event;
+@injectable()
+export default class AuthService implements IAuthService {
+    private _repository;
 
-    public async authorize(): Promise<any> {
+    constructor(@inject(TYPES.IRepositoryManager) repository: IRepositoryManager) {
+        this._repository = repository;
+    }
+
+    public async authorize(): Promise<SuccessResponse<string>> {
         try {
             // Access scopes for read/write google user email, profile and calendar activity.
             const scopes = [
@@ -19,57 +31,52 @@ export class AuthService {
             ];
 
             // Generate a url that asks permissions for the calendar activity scope
-            return oauth2Client.generateAuthUrl({
+            const url = oauth2Client.generateAuthUrl({
                 access_type: 'offline',
                 scope: scopes,
                 prompt: 'consent'
             });
+
+            return new SuccessResponse<string>(200, "Paste this link in your browser to authorize CalendarA", url)
         } catch (error) {
             throw new HttpException(500, 'Something went wrong')
         }
     }
 
-    public async getGoogleUser(code: any): Promise<any> {
-        if (!code) {
-            throw new HttpException(401, 'You are not authorized to access this endpoint.');
-        };
+    public async getGoogleUser(inputCode: AuthDTO): Promise<SuccessResponse<UserLoginResponse>> {
+        if (!inputCode) throw new HttpException(401, 'You are not authorized to access this endpoint.');
 
-        const googleUser = await this.getGUser(code);
+        const googleUser = await this.getGUser(inputCode.code!);
         const { id, email, name } = googleUser.data;
 
-        let user = await this._user.findOne({email})
+        let user = await this._repository.User.findOne({email})
 
-        let event
+        let event;
         
         if (!user) {
-            user = await this._user.create({
-                google_id: id,
+            user = await this._repository.User.create({
+                googleId: id,
                 name: name,
                 email: email,
-                refresh_token: googleUser.refresh_token
+                refreshToken: googleUser.refreshToken
             })
 
-            event = await this._event.create({
-                duration_in_mins: duration_in_mins,
-                start_time: start_time,
-                end_time: end_time,
-                user_id: user._id
+            event = await this._repository.Event.create({
+                durationInMins: durationInMins,
+                startTime: startTime,
+                endTime: endTime,
+                userId: user._id
             })
         }
 
-        if (!event) event = await this._event.findOne({user_id: user._id})
+        if (!event) event = await this._repository.Event.findOne({userId: user._id})
 
-        return { 
-            name: user.name, 
-            email: user.email, 
-            _id: user._id, 
-            duration_in_mins: event?.duration_in_mins,
-            available_start_time: event?.start_time,
-            available_end_time: event?.end_time
-        };
+        const userLoginResponseDto = mapper.map(user, User, UserLoginResponse);
+
+        return new SuccessResponse<UserLoginResponse>(200, 'Google Authorization completed', userLoginResponseDto)
     }
 
-    private async getGUser(code: string): Promise<any> {
+    private async getGUser(code: string): Promise<GetGoogleUser> {
         try {
             const { tokens } = await oauth2Client.getToken(code)
             oauth2Client.setCredentials({
@@ -85,8 +92,9 @@ export class AuthService {
                 },
             )
 
-            return { data: googleUser.data, refresh_token: tokens.refresh_token }
+            return { data: googleUser.data, refreshToken: tokens.refresh_token }
         } catch (error) {
+            logger.error(`Error from Getting User email and profile:: ${error}`);
             throw new HttpException(400, 'Bad request')
         }
     }

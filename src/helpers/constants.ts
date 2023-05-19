@@ -1,3 +1,3 @@
-export const start_time = '08:00';
-export const end_time = '17:00';
-export const duration_in_mins = 30
+export const startTime = '08:00';
+export const endTime = '17:00';
+export const durationInMins = 30;

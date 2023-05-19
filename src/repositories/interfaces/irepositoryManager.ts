@@ -1,5 +1,7 @@
-import ICalendarRepository from "./icalendar.repository"
+import IUserRepository from "./iuser.repository";
+import IEventRepository from "./ievent.repository";
 
 export default interface IRepositoryManager {
-    Calendar: ICalendarRepository;
+    User: IUserRepository;
+    Event: IEventRepository;
 }

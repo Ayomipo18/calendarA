@@ -1,8 +1,9 @@
 import { Types } from 'mongoose';
+import { Document } from "mongoose";
 
-export class Event {
-    duration_in_mins: number;
-    start_time: string;
-    end_time: string;
-    user_id: Types.ObjectId;
+export class Event extends Document {
+    durationInMins: number;
+    startTime: string;
+    endTime: string;
+    userId: Types.ObjectId;
 }

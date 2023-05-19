@@ -17,8 +17,8 @@ export default class CalendarService implements ICalendarService {
         this._repository = repository;
     }
     
-    public async getCalendar(user_id: string, inputDate: GetCalendarDTO): Promise<SuccessResponse<GetCalendarReponse>> {
-        const user = await this._repository.Calendar.findById(user_id);
+    public async getCalendar(userId: string, inputDate: GetCalendarDTO): Promise<SuccessResponse<GetCalendarReponse>> {
+        const user = await this._repository.User.findById(userId);
         let date;
 
         if (!user) throw new HttpException(404, 'User not found');
@@ -31,7 +31,7 @@ export default class CalendarService implements ICalendarService {
 
         try {
             const data = await calendar.freebusy.query({
-                auth: getOAuth2Client(user.refresh_token),
+                auth: getOAuth2Client(user.refreshToken),
                 requestBody: {
                     timeMin: moment(date).startOf('day').format(),
                     timeMax: moment(date).endOf('day').format(),
