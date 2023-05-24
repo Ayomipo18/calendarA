@@ -12,6 +12,8 @@ export const getOAuth2Client = (refresh_token: string) => {
     return oauth2Client
 }
 
+export const googleApi = google;
+
 export const calendar = google.calendar('v3');
 
 export const profileURL = process.env.PROFILE_URL;
