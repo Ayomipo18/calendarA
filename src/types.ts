@@ -1,8 +1,9 @@
 let TYPES = {
     IUserRepository: Symbol("IUserRepository"),
     IEventRepository: Symbol("IEventRepository"),
+    IMeetingRepository: Symbol("IMeetingRepository"),
     IRepositoryManager: Symbol("IRepositoryManager"),
-    ICalendarService: Symbol("ICalendarService"),
+    IBookingService: Symbol("IBookingService"),
     IAuthService: Symbol("IAuthService"),
     IServiceManager: Symbol("IServiceManager")
 };

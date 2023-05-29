@@ -15,7 +15,7 @@ export default class AuthController {
     public async authorize(req: Request, res: Response, next: NextFunction): Promise<any>{
         try {
             const data = await this._service.Auth.authorize();
-            return res.status(200).json(data.data);
+            return res.status(data.status).json({data: data.data, message: data.message});
         } catch(error) {
             next(error);
         }
@@ -25,7 +25,8 @@ export default class AuthController {
         try {
             const code: AuthDTO = req.query;
             const data = await this._service.Auth.getGoogleUser(code);
-            return res.status(200).json(data.data);
+            req.userId = data.data._id;
+            return res.status(data.status).json({data: data.data, message: data.message});
         }catch (error) {
             next(error);
         }

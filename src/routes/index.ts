@@ -1,14 +1,14 @@
 import { Router } from 'express';
 import authRouter from './auth.route'
-import calendarRouter from './calendar.route'
+import bookingRouter from './booking.route'
 //import meetingRouter from './meeting.route'
 import userRouter from './user.route'
 
 const router = Router();
 
-router.use('/v1/auth', authRouter);
-router.use('/v1/calendar', calendarRouter);
+router.use('/auth', authRouter);
+router.use('/booking', bookingRouter);
 //router.use('/meeting', meetingRouter);
-router.use('/v1/user', userRouter);
+router.use('/user', userRouter);
 
 export default router;

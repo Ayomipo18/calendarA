@@ -7,7 +7,10 @@ import SuccessResponse from '../helpers/SuccessResponse';
 import logger from "../logger";
 import { HttpException } from '../exceptions/HttpException'
 import { oauth2Client, profileURL } from '../config/config'
-import { durationInMins, startTime, endTime } from '../helpers/constants'
+import { 
+    event, 
+    EventType
+ } from '../helpers/constants'
 import { GetGoogleUser, UserLoginResponse } from '../dtos/UserDTO';
 import { mapper } from '../mappings/mapper';
 import { User } from '../models/interfaces/iuser.model';
@@ -50,8 +53,6 @@ export default class AuthService implements IAuthService {
         const { id, email, name } = googleUser.data;
 
         let user = await this._repository.User.findOne({email})
-
-        let event;
         
         if (!user) {
             user = await this._repository.User.create({
@@ -61,16 +62,18 @@ export default class AuthService implements IAuthService {
                 refreshToken: googleUser.refreshToken
             })
 
-            event = await this._repository.Event.create({
-                durationInMins: durationInMins,
-                startTime: startTime,
-                endTime: endTime,
-                userId: user._id
+            await this._repository.Event.create({
+                durationInMins: event.durationInMins,
+                startTime: event.startTime,
+                endTime: event.endTime,
+                userId: user._id,
+                eventType: EventType.thirtyMins,
+                summary: event.summary,
+                description: event.description,
+                slug: event.slug
             })
         }
-
-        if (!event) event = await this._repository.Event.findOne({userId: user._id})
-
+        
         const userLoginResponseDto = mapper.map(user, User, UserLoginResponse);
 
         return new SuccessResponse<UserLoginResponse>(200, 'Google Authorization completed', userLoginResponseDto)

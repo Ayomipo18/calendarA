@@ -45,7 +45,7 @@ app.use(express.json());
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs, { explorer: true }));
 
-app.use(route)
+app.use('/v1', route)
 
 app.use(ErrorHandler)
 

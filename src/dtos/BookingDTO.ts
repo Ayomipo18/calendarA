@@ -1,8 +1,17 @@
 import { TimeStatus } from "../helpers/constants";
 import { Moment } from 'moment';
+import { AutoMap } from '@automapper/classes'
+import { Types } from "mongoose";
 
-export class GetCalendarDTO {
-    public date?: string;
+export class GetBookingDTO {
+    public date?: Date;
+};
+
+export class AddUserDTO {
+    public name: string;
+    public email: string;
+    public date: Date;
+    public startTime: Date;
 }
 
 export class BusyInterval {
@@ -24,4 +33,4 @@ export class GetInterval {
 
 export type MomentDTO = Moment;
 
-export type GetCalendarReponse = Array<GetInterval>;
+export type GetBookingResponse = Array<GetInterval>;

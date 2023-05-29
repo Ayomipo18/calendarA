@@ -1,8 +1,18 @@
-export const startTime = '08:00';
-export const endTime = '17:00';
-export const durationInMins = 30;
-export const inBetweenBreak = 10;
-export enum TimeStatus { 
+export const event = {
+    startTime: '08:00',
+    endTime: '17:00',
+    durationInMins: 30,
+    inBetweenBreak: 10,
+    summary: '30 Minute Meeting',
+    description: '30 Minute Meeting',
+    slug: '30min'
+};
+
+export enum TimeStatus {
     available = 'available', 
     unavailable = 'unavailable' 
 };
+
+export enum EventType {
+    thirtyMins = '30Mins'
+}

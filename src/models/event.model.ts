@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose'
 import { Event} from './interfaces/ievent.model'
+import { EventType } from '../helpers/constants'
 
 const eventSchema = new Schema<Event>({
     userId: {
@@ -17,6 +18,23 @@ const eventSchema = new Schema<Event>({
     },
     durationInMins: {
         type: Number,
+        required: true
+    },
+    eventType: {
+        type: String,
+        enum: EventType,
+        default: EventType.thirtyMins
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    summary: {
+        type: String,
+        required: true
+    },
+    slug: {
+        type: String,
         required: true
     }
 })

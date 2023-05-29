@@ -5,7 +5,8 @@ import {
     QueryOptions, 
     Condition,
     UpdateQuery, 
-    UpdateWithAggregationPipeline
+    UpdateWithAggregationPipeline,
+    Types
 } from 'mongoose';
 import { UpdatedModel, DeletedModel } from "./modelTypes";
 import IRepository from './interfaces/irepositoryBase';
@@ -29,7 +30,7 @@ export class RepositoryBase<T extends Document> implements IRepository<T> {
         return await this._model.find(filter, null, options);
     }
     
-    async findById(id: string): Promise<T | null> {
+    async findById(id: string | Types.ObjectId): Promise<T | null> {
         return await this._model.findById(id);
     }
     
