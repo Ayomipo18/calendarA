@@ -14,9 +14,15 @@ const userSchema = new Schema<User>({
         type: String,
         required: true
     },
-    refreshToken: {
+    googleRefreshToken: {
         type: String,
         required: true
+    },
+    refreshToken: {
+        type: String
+    },
+    refreshTokenExpiryTime: {
+        type: Date
     }
 })
 

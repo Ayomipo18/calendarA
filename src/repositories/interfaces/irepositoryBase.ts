@@ -1,30 +1,45 @@
 import { 
     FilterQuery, 
     SaveOptions, 
-    QueryOptions, 
+    QueryOptions,
+    ProjectionType,
     UpdateWithAggregationPipeline, 
     UpdateQuery,
-    Condition
+    QueryWithHelpers,
+    HydratedDocument,
 } from "mongoose";
-import { UpdatedModel, DeletedModel } from "../modelTypes";
+import { UpdateResult, DeleteResult } from "../modelTypes";
 import { Types } from "mongoose";
 
 export default interface IRepository<T> {
-    create(doc: object, saveOptions?: SaveOptions): Promise<T>;
-    findOne(filter: Condition<T>, options?: QueryOptions): Promise<T | null>;
-    find(filter: FilterQuery<T>, options?: QueryOptions): Promise<T[]>;
-    findById(id: string | Types.ObjectId): Promise<T | null>;
-    findAll(): Promise<T[]>;
-    deleteOne(filter: FilterQuery<T>, options?: QueryOptions): Promise<DeletedModel>;
-    deleteMany(filter: FilterQuery<T>, options?: QueryOptions): Promise<DeletedModel>;
+    create(doc: object): Promise<HydratedDocument<T>>;
+
+    bulkCreate(docs: Array<T | object>, options?: SaveOptions): Promise<HydratedDocument<T>[]>
+
+    findOne(filter: FilterQuery<T>, projection?: ProjectionType<T>, options?: QueryOptions): 
+    QueryWithHelpers<HydratedDocument<T> | null, HydratedDocument<T>>;
+
+    find(filter: FilterQuery<T>, projection?: ProjectionType<T>, options?: QueryOptions): 
+    QueryWithHelpers<HydratedDocument<T>[], HydratedDocument<T>>;
+
+    findById(id: string | Types.ObjectId, projection?: ProjectionType<T>, options?: QueryOptions): 
+    QueryWithHelpers<HydratedDocument<T> | null, HydratedDocument<T>>;
+
+    deleteOne(filter?: FilterQuery<T>, options?: QueryOptions): 
+    QueryWithHelpers<DeleteResult, HydratedDocument<T>>;
+
+    deleteMany(filter?: FilterQuery<T>, options?: QueryOptions): 
+    QueryWithHelpers<DeleteResult, HydratedDocument<T>>;
+
     updateOne(
-        filter: FilterQuery<T>,
-        update: UpdateWithAggregationPipeline | UpdateQuery<T>,
-        options?: QueryOptions,
-    ): Promise<UpdatedModel>;
+        filter?: FilterQuery<T>,
+        update?: UpdateWithAggregationPipeline | UpdateQuery<T>,
+        options?: QueryOptions<T>,
+    ): QueryWithHelpers<UpdateResult, HydratedDocument<T>>;
+
     updateMany(
-        filter: FilterQuery<T>,
-        updated: UpdateWithAggregationPipeline | UpdateQuery<T>,
-        options?: QueryOptions,
-    ): Promise<UpdatedModel>
+        filter?: FilterQuery<T>,
+        update?: UpdateWithAggregationPipeline | UpdateQuery<T>,
+        options?: QueryOptions<T>,
+    ): QueryWithHelpers<UpdateResult, HydratedDocument<T>>;
 }

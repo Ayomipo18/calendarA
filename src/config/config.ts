@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import { google } from 'googleapis';
-import { Types } from "mongoose";
 
 export const oauth2Client = new google.auth.OAuth2(
     process.env.CLIENT_ID,
@@ -21,8 +20,10 @@ export const profileURL = process.env.PROFILE_URL;
 
 export const swagger_url = process.env.SWAGGER_URL;
 
+export const jwt_secret = process.env.JWT_SECRET;
+
 declare module 'express-serve-static-core' {
     interface Request {
-        userId: Types.ObjectId;
+        user: object;
     }
 }

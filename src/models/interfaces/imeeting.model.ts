@@ -5,14 +5,16 @@ import { AutoMap } from '@automapper/classes'
 export class Meeting extends Document {
     googleCalendarId: string
     googleEventId: string
-    eventId: Types.ObjectId;
-    userId: Types.ObjectId;
+    user: Types.ObjectId;
 
     @AutoMap()
     _id: Types.ObjectId;
 
     @AutoMap()
-    attendee: Array<object>
+    attendee: object;
+
+    @AutoMap()
+    event: Types.ObjectId;
 
     @AutoMap()
     startTime: string

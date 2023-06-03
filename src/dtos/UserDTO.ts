@@ -10,6 +10,10 @@ export class UserLoginResponse {
 
     @AutoMap()
     public _id: Types.ObjectId;
+
+    public accessToken: string;
+
+    public refreshToken: string;   
 }
 
 export class GetGoogleUser {

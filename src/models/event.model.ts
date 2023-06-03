@@ -3,7 +3,7 @@ import { Event} from './interfaces/ievent.model'
 import { EventType } from '../helpers/constants'
 
 const eventSchema = new Schema<Event>({
-    userId: {
+    user: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: "User"

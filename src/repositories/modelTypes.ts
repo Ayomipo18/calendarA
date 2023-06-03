@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 
-export type UpdatedModel = {
+export type UpdateResult = {
     matchedCount: number;
     modifiedCount: number;
     acknowledged: boolean;
@@ -8,7 +8,7 @@ export type UpdatedModel = {
     upsertedCount: number;
 };
   
-export type DeletedModel = {
+export type DeleteResult = {
     acknowledged: boolean;
     deletedCount: number;
 };

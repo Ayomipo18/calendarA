@@ -16,3 +16,9 @@ export enum TimeStatus {
 export enum EventType {
     thirtyMins = '30Mins'
 }
+
+export const jwtDetails = {
+    expiresIn: 60 * 30,
+    issuer: 'CalendarA',
+    audience: '*'
+}

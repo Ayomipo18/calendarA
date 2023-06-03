@@ -15,8 +15,8 @@ import {
     MomentDTO,
     AddUserDTO
 } from '../dtos/BookingDTO';
+import { BookingResponse } from "../dtos/BookingDTO";
 import { EventResponse } from "../dtos/EventDTO";
-import { MeetingResponse } from "../dtos/MeetingDTO";
 import logger from "../logger";
 import { TimeStatus, event } from "../helpers/constants";
 import { mapper } from '../mappings/mapper';
@@ -57,7 +57,7 @@ export default class BookingService implements IBookingService {
         return new SuccessResponse<GetBookingResponse>(200, 'Booking availability returned Successfully', intervals);
     }
 
-    public async addUser(eventId: string, addUser: AddUserDTO): Promise<SuccessResponse<MeetingResponse>> {
+    public async addUser(eventId: string, addUser: AddUserDTO): Promise<SuccessResponse<BookingResponse>> {
         let valid = false;
         let intervalsIndex = 0;
         const intervalCheck = moment(addUser.date).set({
@@ -85,28 +85,28 @@ export default class BookingService implements IBookingService {
         const meeting = await this._repository.Meeting.create({
             googleCalendarId: eventData.googleData.data.iCalUID,
             googleEventId: eventData.googleData.data.id,
-            userId: eventData.event.userId,
-            eventId: eventId,
+            user: eventData.event.user,
+            event: eventId,
             startTime: eventData.googleData.data.start?.dateTime,
             endTime: eventData.googleData.data.end?.dateTime,
-            attendee: [{name: addUser.name, email: addUser.email}]
+            attendee: {name: addUser.name, email: addUser.email}
         })
 
-        const addUserResponseDto = mapper.map(meeting, Meeting, MeetingResponse);
-        addUserResponseDto.event = mapper.map(eventData.event, Event, EventResponse);
+        const addUserResponseDto = mapper.map(meeting, Meeting, BookingResponse);
+        addUserResponseDto.eventDetails = mapper.map(eventData.event, Event, EventResponse);
         
-        return new SuccessResponse<MeetingResponse>(200, 'Invitee added successfully', addUserResponseDto)
+        return new SuccessResponse<BookingResponse>(200, 'Invitee added successfully', addUserResponseDto)
     }
 
     private async getIntervals(eventId: string, inputDate: Date ): Promise<Array<FreeInterval>> {
         const event = await this._repository.Event.findById(eventId);
         if (!event) throw new HttpException(404, 'Event not found');
 
-        const user = await this._repository.User.findById(event.userId);
+        const user = await this._repository.User.findById(event.user);
         if (!user) throw new HttpException(404, 'User not found');
 
         const calendarId = user.email;
-        const data = await this.getGoogleCalendar(user.email, user.refreshToken, inputDate);
+        const data = await this.getGoogleCalendar(user.email, user.googleRefreshToken, inputDate);
         const busyItems: Array<typeof googleApi.Schema$TimePeriod> = data.data!.calendars![calendarId].busy!;
         const busyIntervals = Array<BusyInterval>(), freeIntervals = new Array<FreeInterval>();
         const duration = event.durationInMins;
@@ -229,12 +229,12 @@ export default class BookingService implements IBookingService {
         const event = await this._repository.Event.findById(eventId);
         if (!event) throw new HttpException(404, 'Event not found');
 
-        const user = await this._repository.User.findById(event.userId);
+        const user = await this._repository.User.findById(event.user);
         if (!user) throw new HttpException(404, 'User not found');
 
         try {
             const data = await calendar.events.insert({
-                auth: getOAuth2Client(user.refreshToken),
+                auth: getOAuth2Client(user.googleRefreshToken),
                 calendarId: user.email,
                 requestBody: {
                     summary: event.summary,

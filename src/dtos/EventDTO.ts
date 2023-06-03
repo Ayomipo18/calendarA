@@ -16,7 +16,7 @@ export class EventResponse {
     public endTime: string;
 
     @AutoMap()
-    public userId: Types.ObjectId;
+    public user: Types.ObjectId;
 
     @AutoMap()
     public eventType: EventType;

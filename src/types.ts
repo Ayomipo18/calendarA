@@ -5,7 +5,9 @@ let TYPES = {
     IRepositoryManager: Symbol("IRepositoryManager"),
     IBookingService: Symbol("IBookingService"),
     IAuthService: Symbol("IAuthService"),
-    IServiceManager: Symbol("IServiceManager")
+    IServiceManager: Symbol("IServiceManager"),
+    IMeetingService: Symbol("IMeetingService"),
+    IEventService: Symbol("IEventService")
 };
 
 export default TYPES;

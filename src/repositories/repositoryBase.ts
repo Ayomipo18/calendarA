@@ -1,14 +1,17 @@
 import { 
-    Document, 
+    Document,
     Model, 
     FilterQuery, 
-    QueryOptions, 
-    Condition,
+    QueryOptions,
     UpdateQuery, 
     UpdateWithAggregationPipeline,
-    Types
+    Types,
+    QueryWithHelpers,
+    HydratedDocument,
+    ProjectionType,
+    SaveOptions
 } from 'mongoose';
-import { UpdatedModel, DeletedModel } from "./modelTypes";
+import { UpdateResult, DeleteResult } from "./modelTypes";
 import IRepository from './interfaces/irepositoryBase';
 
 export class RepositoryBase<T extends Document> implements IRepository<T> {
@@ -18,47 +21,52 @@ export class RepositoryBase<T extends Document> implements IRepository<T> {
         this._model = model;
     }
 
-    async create(doc: object): Promise<T> {
+    async create(doc: T | object): Promise<HydratedDocument<T>> {
         return await this._model.create(doc);
     }
+
+    async bulkCreate(docs: Array<T | object>, options?: SaveOptions): Promise<HydratedDocument<T>[]> {
+        return this._model.create(docs, options);
+    }
     
-    async findOne(condition: Condition<T>, options?: QueryOptions): Promise<T | null> {
-        return await this._model.findOne(condition, options);
+    findOne(condition: FilterQuery<T>, projection?: ProjectionType<T>, options?: QueryOptions): 
+    QueryWithHelpers<HydratedDocument<T> | null, HydratedDocument<T>> {
+        return this._model.findOne(condition, projection, options);
     }
 
-    async find(filter: FilterQuery<T>, options?: QueryOptions): Promise<T[]> {
-        return await this._model.find(filter, null, options);
+    find(filter: FilterQuery<T>, projection?: ProjectionType<T>, options?: QueryOptions): 
+    QueryWithHelpers<HydratedDocument<T>[], HydratedDocument<T>> {
+        return this._model.find(filter, projection, options);
     }
     
-    async findById(id: string | Types.ObjectId): Promise<T | null> {
-        return await this._model.findById(id);
+    findById(id: string | Types.ObjectId, projection?: ProjectionType<T>, options?: QueryOptions): 
+    QueryWithHelpers<HydratedDocument<T> | null, HydratedDocument<T>> {
+        return this._model.findById(id);
     }
     
-    async findAll(): Promise<T[]> {
-        return await this._model.find();
-    }
-    
-    async deleteOne(filter: FilterQuery<T>, options?: QueryOptions): Promise<DeletedModel> {
-        return await this._model.deleteOne(filter, options);
+    deleteOne(filter?: FilterQuery<T>, options?: QueryOptions): 
+    QueryWithHelpers<DeleteResult, HydratedDocument<T>> {
+        return this._model.deleteOne(filter, options);
     }
 
-    async deleteMany(filter: FilterQuery<T>, options?: QueryOptions): Promise<DeletedModel> {
-        return await this._model.deleteMany(filter, options);
+    deleteMany(filter?: FilterQuery<T>, options?: QueryOptions): 
+    QueryWithHelpers<DeleteResult, HydratedDocument<T>> {
+        return this._model.deleteMany(filter, options);
     }
     
-    async updateOne(
-        filter: FilterQuery<T>,
-        updated: UpdateWithAggregationPipeline | UpdateQuery<T>,
-        options?: QueryOptions,
-    ): Promise<UpdatedModel> {
-        return await this._model.updateOne(filter, updated, options);
+    updateOne(
+        filter?: FilterQuery<T>,
+        updated?: UpdateWithAggregationPipeline | UpdateQuery<T>,
+        options?: QueryOptions<T>,
+    ): QueryWithHelpers<UpdateResult, HydratedDocument<T>> {
+        return this._model.updateOne(filter, updated, options);
     }
     
-    async updateMany(
-        filter: FilterQuery<T>,
-        updated: UpdateWithAggregationPipeline | UpdateQuery<T>,
-        options?: QueryOptions,
-    ): Promise<UpdatedModel> {
-        return await this._model.updateMany(filter, updated, options);
+    updateMany(
+        filter?: FilterQuery<T>,
+        updated?: UpdateWithAggregationPipeline | UpdateQuery<T>,
+        options?: QueryOptions<T>,
+    ): QueryWithHelpers<UpdateResult, HydratedDocument<T>> {
+        return this._model.updateMany(filter, updated, options);
     }
 }

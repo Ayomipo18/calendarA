@@ -16,15 +16,9 @@ export class User extends Document {
     email: string;
 
     @AutoMap()
+    googleRefreshToken: string;
+
     refreshToken: string;
-}
 
-export class Attendee {
-    public _id: Types.ObjectId;
-
-    @AutoMap()
-    public email: string;
-
-    @AutoMap()
-    public name: string;
+    refreshTokenExpiryTime: Date; 
 }

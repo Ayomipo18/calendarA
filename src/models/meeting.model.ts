@@ -10,7 +10,7 @@ const meetingSchema = new Schema<Meeting>({
         type: String,
         required: true
     },
-    eventId: {
+    event: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: "Event"
@@ -23,7 +23,7 @@ const meetingSchema = new Schema<Meeting>({
         type: String,
         required: true
     },
-    attendee: [{
+    attendee: {
         email: {
             type: String,
             required: true
@@ -32,7 +32,12 @@ const meetingSchema = new Schema<Meeting>({
             type: String,
             required: true
         }
-    }]
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: "User"
+    }
 })
 
 const MeetingModel = model<Meeting>('Meeting', meetingSchema)

@@ -2,19 +2,22 @@ import IRepositoryManager from '../repositories/interfaces/irepositoryManager';
 import IAuthService from './interfaces/iauth.service';
 import axios from 'axios';
 import { injectable, inject } from "inversify";
+import jwt from 'jsonwebtoken';
+import { nanoid } from 'nanoid'
 import TYPES from '../types';
 import SuccessResponse from '../helpers/SuccessResponse';
 import logger from "../logger";
 import { HttpException } from '../exceptions/HttpException'
-import { oauth2Client, profileURL } from '../config/config'
+import { oauth2Client, profileURL, jwt_secret } from '../config/config'
 import { 
     event, 
-    EventType
+    EventType,
+    jwtDetails
  } from '../helpers/constants'
 import { GetGoogleUser, UserLoginResponse } from '../dtos/UserDTO';
 import { mapper } from '../mappings/mapper';
 import { User } from '../models/interfaces/iuser.model';
-import { AuthDTO } from '../dtos/AuthDTO';
+import { AuthDTO, AuthTokenDTO, AuthTokenResponse } from '../dtos/AuthDTO';
 
 @injectable()
 export default class AuthService implements IAuthService {
@@ -59,14 +62,14 @@ export default class AuthService implements IAuthService {
                 googleId: id,
                 name: name,
                 email: email,
-                refreshToken: googleUser.refreshToken
+                googleRefreshToken: googleUser.refreshToken
             })
 
             await this._repository.Event.create({
                 durationInMins: event.durationInMins,
                 startTime: event.startTime,
                 endTime: event.endTime,
-                userId: user._id,
+                user: user._id,
                 eventType: EventType.thirtyMins,
                 summary: event.summary,
                 description: event.description,
@@ -74,9 +77,36 @@ export default class AuthService implements IAuthService {
             })
         }
         
+        const token = await this.generateToken(user, true);
         const userLoginResponseDto = mapper.map(user, User, UserLoginResponse);
 
+        userLoginResponseDto.refreshToken = token.refreshToken;
+        userLoginResponseDto.accessToken = token.accessToken;
+
         return new SuccessResponse<UserLoginResponse>(200, 'Google Authorization completed', userLoginResponseDto)
+    }
+
+    public async refreshToken(token: AuthTokenDTO): Promise<SuccessResponse<AuthTokenResponse>> {
+        let newToken : AuthTokenResponse = new AuthTokenResponse();
+        try {
+            jwt.verify(token.accessToken, jwt_secret!, 
+                {audience: jwtDetails.audience, issuer: jwtDetails.issuer})
+        } catch (error: any) {
+            if (error.name === 'TokenExpiredError') {
+                const decoded: any = jwt.verify(token.accessToken, jwt_secret!, 
+                    {audience: jwtDetails.audience, issuer: jwtDetails.issuer, ignoreExpiration: true})
+
+                const user = await this._repository.User.findById(decoded.id);
+                if(!user || token.refreshToken !== user.refreshToken || user.refreshTokenExpiryTime < new Date() ) {
+                    throw new HttpException(400, 'Bad token')
+                }
+                
+                newToken = await this.generateToken(user, false);
+            } else{
+                throw new HttpException(400, 'This token has expired, please login')
+            }
+        }
+        return new SuccessResponse<AuthTokenResponse>(200, 'Token refreshed successfully', newToken);
     }
 
     private async getGUser(code: string): Promise<GetGoogleUser> {
@@ -100,5 +130,28 @@ export default class AuthService implements IAuthService {
             logger.error(`Error from Getting User email and profile:: ${error}`);
             throw new HttpException(400, 'Bad request')
         }
+    }
+
+    private async generateToken(user: User, populate: boolean) {
+        const tokenDetails = {
+            id: user.id,
+            email: user.email
+        }
+        const accessToken = jwt.sign(tokenDetails, jwt_secret!, jwtDetails);
+        const refreshToken = nanoid();
+
+        user.refreshToken = refreshToken;
+        if(populate) {
+            user.refreshTokenExpiryTime = new Date();
+            user.refreshTokenExpiryTime.setDate(user.refreshTokenExpiryTime.getDate() + 7);
+        }
+
+        await user.save();
+
+        const token = new AuthTokenResponse();
+        token.accessToken = accessToken;
+        token.refreshToken = refreshToken;
+
+        return token;
     }
 }

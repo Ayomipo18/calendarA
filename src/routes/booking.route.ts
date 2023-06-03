@@ -4,7 +4,6 @@ import { Router } from 'express';
 import BookingController from '../controllers/booking.controller';
 import validator from '../validators';
 import { bookingValidator } from '../validators/booking.validator';
-import { isLoggedIn } from '../middlewares/auth.middleware';
 
 const bookingController: BookingController = container.resolve(BookingController);
 

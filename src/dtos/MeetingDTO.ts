@@ -1,6 +1,5 @@
 import { AutoMap } from '@automapper/classes'
 import { Types } from "mongoose";
-import { EventResponse } from './EventDTO';
 
 export class MeetingResponse {
     @AutoMap()
@@ -10,7 +9,7 @@ export class MeetingResponse {
     public attendee: Array<object>
 
     @AutoMap()
-    public event: EventResponse
+    public event: Types.ObjectId;
 
     @AutoMap()
     startTime: string
