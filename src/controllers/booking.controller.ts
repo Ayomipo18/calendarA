@@ -1,15 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { injectable, inject } from "inversify";
-import TYPES from "../types";
+import TYPES from "../di/types";
 import IServiceManager from "../services/interfaces/iserviceManager";
 import { 
     GetBookingDTO, 
-    AddUserDTO 
+    AddInviteeDTO 
 } from "../dtos/BookingDTO";
 import { ValidatedRequest } from 'express-joi-validation'
 import {
      getAvailabilitySchema, 
-     addUserSchema
+     addInviteeSchema
 } from '../validators/booking.validator';
 
 @injectable()
@@ -22,18 +22,18 @@ export default class BookingController {
     
     public async getAvailability(req: ValidatedRequest<getAvailabilitySchema>, res: Response, next: NextFunction){
         try {
-            const GetBookingDTO: GetBookingDTO = req.query;
-            const data = await this._service.Booking.getAvailability(req.params.eventId, GetBookingDTO);
+            const getBookingDTO: GetBookingDTO = req.query;
+            const data = await this._service.Booking.getAvailability(req.params.eventId, getBookingDTO);
             return res.status(data.status).json({data: data.data, message: data.message});
         } catch (error) {
             next(error);
         }
     }
 
-    public async addUser(req: ValidatedRequest<addUserSchema>, res: Response, next: NextFunction){
+    public async addInvitee(req: ValidatedRequest<addInviteeSchema>, res: Response, next: NextFunction){
         try {
-            const addUserDTO: AddUserDTO = req.body;
-            const data = await this._service.Booking.addUser(req.params.eventId, addUserDTO);
+            const addInviteeDTO: AddInviteeDTO = req.body;
+            const data = await this._service.Booking.addInvitee(req.params.eventId, addInviteeDTO);
             return res.status(data.status).json({data: data.data, message: data.message});
         } catch (error) {
             next(error);
