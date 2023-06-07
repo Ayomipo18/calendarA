@@ -17,8 +17,9 @@ export const eventValidator = {
     createEventSchema: joi.object({
         durationInMins: joi.number().min(1).max(event.maxDurationInMins).required(),
         startTime: joi.date().iso().required(),
-        endTime: joi.date().iso().required(),
+        endTime: joi.date().min(joi.ref('startTime')).iso().required(),
         type: joi.string().valid(...Object.values(EventType)).required(),
+        intervalBreak: joi.number().min(0).max(event.maxIntervalBreak).required(),
         summary: joi.string().required(),
         description: joi.string().required(),
         slug: joi.string().required()
@@ -41,6 +42,7 @@ export interface eventResourceSchema extends ValidatedRequestSchema {
 export interface createEventSchema extends ValidatedRequestSchema {
     [ContainerTypes.Body]: {
         durationInMins: number,
+        intervalBreak: number,
         startTime: Date,
         endTime: Date,
         type: string,

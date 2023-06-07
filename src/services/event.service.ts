@@ -11,6 +11,7 @@ import { PagedResponse, Meta } from '../helpers/PagedResponse';
 import SuccessResponse from '../helpers/SuccessResponse';
 import { HttpException } from '../exceptions/HttpException';
 import { StatusCodes } from 'http-status-codes';
+import { Types } from 'mongoose';
 
 @injectable()
 export default class EventService implements IEventService {
@@ -71,21 +72,24 @@ export default class EventService implements IEventService {
         })
         if (eventExists) throw new HttpException(StatusCodes.BAD_REQUEST, 'Event exists already')
 
+        const model = mapper.map(createEventDTO, CreateEventDTO, Event)
         const time = this.formatStartEndTime(createEventDTO);
-        const event = mapper.map(createEventDTO, CreateEventDTO, Event);
-        event.startTime = time.startTime;
-        event.endTime = time.endTime;
+        model.startTime = time.startTime;
+        model.endTime = time.endTime;
+        model.user = new Types.ObjectId(loggedInUser.id);
+        
+        const event = this._repository.Event.create(model);
         await event.save();
 
         const eventResponseDto = mapper.map(event, Event, EventResponse);
-        return new SuccessResponse<EventResponse>(StatusCodes.OK, 'Event created successfully', eventResponseDto)
+        return new SuccessResponse<EventResponse>(StatusCodes.CREATED, 'Event created successfully', eventResponseDto)
     }
 
     public async updateEvent(updateEventDTO: UpdateEventDTO, eventId: string, loggedInUser: LoggedInUser): Promise<SuccessResponse<EventResponse>> {
-        const eventExists = await this._repository.Event.findOne({
+        const event = await this._repository.Event.findOne({
             _id: eventId, user: loggedInUser.id
         });
-        if (!eventExists) throw new HttpException(StatusCodes.NOT_FOUND, 'Event does not exist');
+        if (!event) throw new HttpException(StatusCodes.NOT_FOUND, 'Event does not exist');
 
         const eventDuplicate = await this._repository.Event.findOne({
             $or: [
@@ -96,13 +100,13 @@ export default class EventService implements IEventService {
         if (eventDuplicate) throw new HttpException(StatusCodes.BAD_REQUEST, 'Event exists already')
 
         const time = this.formatStartEndTime(updateEventDTO);
-        const event = mapper.map(updateEventDTO, UpdateEventDTO, Event);
+        mapper.mutate(updateEventDTO, event, UpdateEventDTO, Event)
         event.startTime = time.startTime;
         event.endTime = time.endTime;
-        await event.save();
+        await this._repository.Event.updateOne({_id: eventId}, event)
 
         const eventResponseDto = mapper.map(event, Event, EventResponse);
-        return new SuccessResponse<EventResponse>(StatusCodes.OK, 'Event created successfully', eventResponseDto)
+        return new SuccessResponse<EventResponse>(StatusCodes.OK, 'Event updated successfully', eventResponseDto)
     }
 
     public async deleteEvent(eventId: string, loggedInUser: LoggedInUser): Promise<SuccessResponse<null>> {
@@ -114,7 +118,7 @@ export default class EventService implements IEventService {
             throw new HttpException(StatusCodes.NOT_FOUND, 'Event does not exist');
         }
 
-        return new SuccessResponse<null>(StatusCodes.NO_CONTENT, 'Event created successfully', null)
+        return new SuccessResponse<null>(StatusCodes.NO_CONTENT, 'Event deleted successfully', null)
     }
 
     public async getEvent(eventId: string, loggedInUser: LoggedInUser): Promise<SuccessResponse<EventResponse>> {
@@ -125,7 +129,7 @@ export default class EventService implements IEventService {
         if(!event) throw new HttpException(StatusCodes.NOT_FOUND, 'Event does not exist');
 
         const eventResponseDto = mapper.map(event, Event, EventResponse);
-        return new SuccessResponse<EventResponse>(StatusCodes.OK, 'Event created successfully', eventResponseDto)
+        return new SuccessResponse<EventResponse>(StatusCodes.OK, 'Event returned successfully', eventResponseDto)
     }
 
     private formatStartEndTime(input: CreateEventDTO) {

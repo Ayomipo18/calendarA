@@ -13,7 +13,7 @@ const errorMiddleware = (error: any, req: Request, res: Response, next: NextFunc
         else {
             const status: number = error.status || StatusCodes.INTERNAL_SERVER_ERROR;
             const message: string = error.message || 'Internal Server Error';
-    
+
             res.status(status).json({ message });
         }
     } catch(error) {

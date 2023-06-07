@@ -72,6 +72,7 @@ export default class AuthService implements IAuthService {
                     durationInMins: event.durationInMins,
                     startTime: event.startTime,
                     endTime: event.endTime,
+                    intervalBreak : event.intervalBreak,
                     user: newUser._id,
                     summary: event.summary,
                     description: event.description,

@@ -7,6 +7,7 @@ import { EventResponse } from '../dtos/EventDTO';
 import { Meeting } from '../models/interfaces/imeeting.model';
 import { MeetingResponse } from '../dtos/MeetingDTO';
 import { UpdateEventDTO } from '../dtos/EventDTO';
+import { CreateEventDTO } from '../dtos/EventDTO';
 
 // Create and export the mapper
 export const mapper = createMapper({
@@ -21,4 +22,5 @@ createMap(mapper,
     forMember((dest) => dest.host, mapFrom((source) => source.user))
 );
 createMap(mapper, Event, EventResponse);
+createMap(mapper, CreateEventDTO, Event);
 createMap(mapper, UpdateEventDTO, Event);

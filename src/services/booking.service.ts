@@ -22,7 +22,7 @@ import { mapper } from '../mappings/mapper';
 import { Meeting } from "../models/interfaces/imeeting.model";
 import { StatusCodes } from 'http-status-codes';
 
-const { inBetweenBreak } = event;
+const { intervalBreak } = event;
 
 @injectable()
 export default class BookingService implements IBookingService {
@@ -108,6 +108,7 @@ export default class BookingService implements IBookingService {
         const busyItems: Array<typeof googleApi.Schema$TimePeriod> = data.data!.calendars![calendarId].busy!;
         const busyIntervals = Array<BusyInterval>(), freeIntervals = new Array<FreeInterval>();
         const duration = event.durationInMins;
+        const intervalBreak = event.intervalBreak;
         const date = inputDate;
 
         let startTime = moment(date).set({
@@ -128,7 +129,7 @@ export default class BookingService implements IBookingService {
             freeInterval.endTime = startTime.clone().add(duration, 'm');
             freeInterval.status = TimeStatus.available;
             freeIntervals.push(freeInterval);
-            startTime.add(duration + inBetweenBreak, 'm');
+            startTime.add(duration + intervalBreak, 'm');
         }
 
         //convert busy to Moment format

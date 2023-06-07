@@ -14,6 +14,9 @@ export class CreateEventDTO {
     public type: string;
 
     @AutoMap()
+    public intervalBreak: number;
+
+    @AutoMap()
     public summary: string;
 
     @AutoMap()
@@ -31,6 +34,9 @@ export class EventResponse {
 
     @AutoMap()
     public durationInMins: number;
+
+    @AutoMap()
+    public intervalBreak: number;
 
     @AutoMap()
     public startTime: string;

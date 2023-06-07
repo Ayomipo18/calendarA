@@ -20,6 +20,10 @@ const eventSchema = new Schema<Event>({
         type: Number,
         required: true
     },
+    intervalBreak : {
+        type: Number,
+        required: true
+    },
     type: {
         type: String,
         enum: EventType,

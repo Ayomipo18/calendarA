@@ -8,13 +8,12 @@ import {
     Types,
     QueryWithHelpers,
     HydratedDocument,
-    ProjectionType,
-    AnyObject
+    ProjectionType
 } from 'mongoose';
 import { UpdateResult, DeleteResult } from "./modelTypes";
 import IRepository from './interfaces/irepositoryBase';
 
-export class RepositoryBase<T extends Document> implements IRepository<T> {
+export class RepositoryBase<T> implements IRepository<T> {
     private _model: Model<T>;
 
     constructor(model: Model<T>) {

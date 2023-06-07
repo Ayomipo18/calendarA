@@ -6,5 +6,4 @@ export default interface IRepositoryManager {
     User: IUserRepository;
     Event: IEventRepository;
     Meeting: IMeetingRepository;
-    BeginTransaction(action: () => Promise<void>): Promise<void>
 }

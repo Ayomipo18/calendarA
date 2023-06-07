@@ -3,7 +3,8 @@ export const event = {
     endTime: '17:00',
     durationInMins: 30,
     maxDurationInMins: 6*60,
-    inBetweenBreak: 10,
+    intervalBreak: 10,
+    maxIntervalBreak: 6*60,
     summary: '30 Minute Meeting',
     description: '30 Minute Meeting',
     slug: '30min'

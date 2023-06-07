@@ -2,12 +2,15 @@ import { Types, Document } from 'mongoose';
 import { EventType } from '../../helpers/constants';
 import { AutoMap } from '@automapper/classes'
 
-export class Event extends Document {
+export class Event{
     @AutoMap()
     _id: Types.ObjectId;
     
     @AutoMap()
     durationInMins: number;
+
+    @AutoMap()
+    intervalBreak: number;
 
     @AutoMap()
     startTime: string;
@@ -19,7 +22,7 @@ export class Event extends Document {
     user: Types.ObjectId;
 
     @AutoMap()
-    type: EventType;
+    type: string;
 
     @AutoMap()
     description: string;

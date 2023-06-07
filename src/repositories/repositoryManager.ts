@@ -30,20 +30,4 @@ export default class RepositoryManager implements IRepositoryManager{
     public get Meeting (): IMeetingRepository {
         return this._meetingRepository;
     }
-
-    public async BeginTransaction(action: () => Promise<void>): Promise<void> {
-        const session: ClientSession = await mongoose.startSession(); 
-        session.startTransaction();
-        
-        try {
-            await action();
-            await session.commitTransaction();
-        } catch (error) {
-            await session.abortTransaction();
-            throw error;
-        } finally {
-            session.endSession();
-        }
-
-      }
 }
