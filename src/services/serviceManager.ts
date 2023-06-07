@@ -5,7 +5,7 @@ import IBookingService from "./interfaces/ibooking.service";
 import IAuthService from "./interfaces/iauth.service";
 import IMeetingService from "./interfaces/imeeting.service";
 import IEventService from "./interfaces/ievent.service";
-import TYPES from "../types";
+import TYPES from "../di/types";
 
 @injectable()
 export default class ServiceManager implements IServiceManager{

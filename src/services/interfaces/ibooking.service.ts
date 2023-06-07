@@ -1,12 +1,12 @@
 import { 
     GetBookingDTO, 
-    AddUserDTO,
+    AddInviteeDTO,
     GetBookingResponse,
 } from "../../dtos/BookingDTO";
-import { BookingResponse } from "../../dtos/BookingDTO";
+import { MeetingResponse } from "../../dtos/MeetingDTO";
 import SuccessResponse from "../../helpers/SuccessResponse";
 
 export default interface IBookingService {
     getAvailability(eventId: string, inputDate: GetBookingDTO): Promise<SuccessResponse<GetBookingResponse>>
-    addUser(eventId: string, addUser: AddUserDTO): Promise<SuccessResponse<BookingResponse>>
+    addInvitee(eventId: string, addUser: AddInviteeDTO): Promise<SuccessResponse<MeetingResponse>>
 }

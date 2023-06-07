@@ -6,15 +6,13 @@ import {
     UpdateWithAggregationPipeline, 
     UpdateQuery,
     QueryWithHelpers,
-    HydratedDocument,
+    HydratedDocument
 } from "mongoose";
 import { UpdateResult, DeleteResult } from "../modelTypes";
 import { Types } from "mongoose";
 
 export default interface IRepository<T> {
-    create(doc: object): Promise<HydratedDocument<T>>;
-
-    bulkCreate(docs: Array<T | object>, options?: SaveOptions): Promise<HydratedDocument<T>[]>
+    create(doc: object): HydratedDocument<T>;
 
     findOne(filter: FilterQuery<T>, projection?: ProjectionType<T>, options?: QueryOptions): 
     QueryWithHelpers<HydratedDocument<T> | null, HydratedDocument<T>>;

@@ -4,7 +4,7 @@ import { Router } from 'express';
 import MeetingController from '../controllers/meeting.controller';
 import validator from '../validators';
 import { isLoggedIn } from '../middlewares/auth.middleware';
-//import { meetingValidator } from '../validators/booking.validator';
+import { meetingValidator } from '../validators/meeting.validator';
 
 const meetingController: MeetingController = container.resolve(MeetingController);
 
@@ -13,7 +13,7 @@ const meetingRouter = Router();
 meetingRouter.get(
     '/',
     isLoggedIn,
-    //validate query for pagination and searching and filtering,
+    validator.query(meetingValidator.meetingResourceSchema),
     meetingController.getAllMeetings.bind(meetingController)
 )
 

@@ -8,14 +8,10 @@ export const bookingValidator = {
     getAvailabilitySchema: joi.object({
         date: joi.date().iso()
     }),
-    eventIdParamsSchema: joi.object({
-        eventId: joi.string().hex().length(24).message('Must be a valid Id')
-    }),
-    addUserSchema: joi.object({
+    addInviteeSchema: joi.object({
         email: joi.string().email().required(),
         name: joi.string().required(),
-        date: joi.date().min(new Date().setHours(0,0,0,0)).iso().required(),
-        startTime: joi.date().iso().required()
+        start: joi.date().min(new Date().setHours(0,0,0,0)).iso().required()
     })
 }
 
@@ -24,7 +20,7 @@ export interface getAvailabilitySchema extends ValidatedRequestSchema {
     [ContainerTypes.Params]: {eventId: string}
 }
 
-export interface addUserSchema extends ValidatedRequestSchema {
-    [ContainerTypes.Body]: {email: string, name: string, date: Date, startTime: Date},
+export interface addInviteeSchema extends ValidatedRequestSchema {
+    [ContainerTypes.Body]: {email: string, name: string, start: Date},
     [ContainerTypes.Params]: {eventId: string}
 }

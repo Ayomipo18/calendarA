@@ -1,5 +1,5 @@
 import container from "./container";
-import TYPES from "../types";
+import TYPES from "./types";
 
 import IRepositoryManager from "../repositories/interfaces/irepositoryManager";
 import IUserRepository from "../repositories/interfaces/iuser.repository";

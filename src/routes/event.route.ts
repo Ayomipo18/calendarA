@@ -4,16 +4,45 @@ import { Router } from 'express';
 import EventController from '../controllers/event.controller';
 import validator from '../validators';
 import { isLoggedIn } from '../middlewares/auth.middleware';
-//import { meetingValidator } from '../validators/booking.validator';
+import { eventValidator } from '../validators/event.validator';
 
 const eventController: EventController = container.resolve(EventController);
 
 const eventRouter = Router();
 
+eventRouter.post(
+    '/',
+    isLoggedIn,
+    validator.body(eventValidator.createEventSchema),
+    eventController.createEvent.bind(eventController)
+)
+
+eventRouter.put(
+    '/:eventId',
+    isLoggedIn,
+    validator.params(eventValidator.eventIdParamsSchema),
+    validator.body(eventValidator.createEventSchema),
+    eventController.updateEvent.bind(eventController)
+)
+
+eventRouter.delete(
+    '/:eventId',
+    isLoggedIn,
+    validator.params(eventValidator.eventIdParamsSchema),
+    eventController.deleteEvent.bind(eventController)
+)
+
+eventRouter.get(
+    '/:eventId',
+    isLoggedIn,
+    validator.params(eventValidator.eventIdParamsSchema),
+    eventController.getEvent.bind(eventController)
+)
+
 eventRouter.get(
     '/',
     isLoggedIn,
-    //validate query for pagination and searching and filtering,
+    validator.query(eventValidator.eventResourceSchema),
     eventController.getAllEvents.bind(eventController)
 )
 

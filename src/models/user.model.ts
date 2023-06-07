@@ -24,7 +24,7 @@ const userSchema = new Schema<User>({
     refreshTokenExpiryTime: {
         type: Date
     }
-})
+}, { timestamps: true })
 
 const UserModel = model<User>('User', userSchema)
 

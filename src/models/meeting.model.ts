@@ -1,5 +1,6 @@
 import { Schema, model, Types } from 'mongoose'
 import { Meeting } from './interfaces/imeeting.model'
+import { EventType } from '../helpers/constants'
 
 const meetingSchema = new Schema<Meeting>({
     googleCalendarId: {
@@ -10,20 +11,28 @@ const meetingSchema = new Schema<Meeting>({
         type: String,
         required: true
     },
-    event: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "Event"
+    type: {
+        type: String,
+        enum: EventType,
+        required: true
     },
-    startTime: {
+    description: {
         type: String,
         required: true
     },
-    endTime: {
+    summary: {
         type: String,
         required: true
     },
-    attendee: {
+    start: {
+        type: Date,
+        required: true
+    },
+    end: {
+        type: Date,
+        required: true
+    },
+    invitee: [{
         email: {
             type: String,
             required: true
@@ -32,13 +41,13 @@ const meetingSchema = new Schema<Meeting>({
             type: String,
             required: true
         }
-    },
+    }],
     user: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: "User"
     }
-})
+}, { timestamps: true })
 
 const MeetingModel = model<Meeting>('Meeting', meetingSchema)
 

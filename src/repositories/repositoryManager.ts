@@ -1,10 +1,11 @@
+import mongoose, { ClientSession } from 'mongoose';
 import { injectable } from "inversify";
 import lazyInject from "../di/decorators";
 import IRepositoryManager from "./interfaces/irepositoryManager";
 import IUserRepository from "./interfaces/iuser.repository";
 import IEventRepository from "./interfaces/ievent.repository";
 import IMeetingRepository from "./interfaces/imeeting.repository";
-import TYPES from "../types";
+import TYPES from "../di/types";
 
 @injectable()
 export default class RepositoryManager implements IRepositoryManager{
@@ -30,4 +31,19 @@ export default class RepositoryManager implements IRepositoryManager{
         return this._meetingRepository;
     }
 
+    public async BeginTransaction(action: () => Promise<void>): Promise<void> {
+        const session: ClientSession = await mongoose.startSession(); 
+        session.startTransaction();
+        
+        try {
+            await action();
+            await session.commitTransaction();
+        } catch (error) {
+            await session.abortTransaction();
+            throw error;
+        } finally {
+            session.endSession();
+        }
+
+      }
 }

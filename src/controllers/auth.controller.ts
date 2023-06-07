@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import IServiceManager from '../services/interfaces/iserviceManager';
 import { injectable, inject } from "inversify";
-import TYPES from "../types";
+import TYPES from "../di/types";
 import { AuthDTO } from '../dtos/AuthDTO';
 import { refreshTokenSchema } from '../validators/auth.validator';
 import { ValidatedRequest } from 'express-joi-validation';

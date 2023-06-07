@@ -19,7 +19,7 @@ export class Event extends Document {
     user: Types.ObjectId;
 
     @AutoMap()
-    eventType: EventType;
+    type: EventType;
 
     @AutoMap()
     description: string;

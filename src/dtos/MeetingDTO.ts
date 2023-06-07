@@ -6,14 +6,23 @@ export class MeetingResponse {
     public _id: Types.ObjectId;
 
     @AutoMap()
-    public attendee: Array<object>
+    public invitee: Array<object>
 
     @AutoMap()
-    public event: Types.ObjectId;
+    public start: Date
 
     @AutoMap()
-    startTime: string
+    public end: Date
 
     @AutoMap()
-    endTime: string
+    public type: string
+
+    @AutoMap()
+    public description: string
+
+    @AutoMap()
+    public summary: string
+
+    @AutoMap()
+    public host: Types.ObjectId
 };

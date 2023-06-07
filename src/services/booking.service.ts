@@ -1,5 +1,5 @@
 import { injectable, inject } from "inversify";
-import TYPES from "../types";
+import TYPES from "../di/types";
 import IBookingService from './interfaces/ibooking.service';
 import IRepositoryManager from '../repositories/interfaces/irepositoryManager';
 import { HttpException } from '../exceptions/HttpException'
@@ -13,15 +13,14 @@ import {
     BusyInterval, 
     FreeInterval, 
     MomentDTO,
-    AddUserDTO
+    AddInviteeDTO
 } from '../dtos/BookingDTO';
-import { BookingResponse } from "../dtos/BookingDTO";
-import { EventResponse } from "../dtos/EventDTO";
+import { MeetingResponse } from "../dtos/MeetingDTO";
 import logger from "../logger";
 import { TimeStatus, event } from "../helpers/constants";
 import { mapper } from '../mappings/mapper';
 import { Meeting } from "../models/interfaces/imeeting.model";
-import { Event } from "../models/interfaces/ievent.model";
+import { StatusCodes } from 'http-status-codes';
 
 const { inBetweenBreak } = event;
 
@@ -48,29 +47,26 @@ export default class BookingService implements IBookingService {
 
         formattedIntervals.forEach(formattedInterval => {
             let getInterval = new GetInterval();
-            getInterval.startTime = moment(formattedInterval.startTime).format('h:mm');
-            getInterval.endTime = moment(formattedInterval.endTime).format('h:mm');
+            getInterval.startTime = moment(formattedInterval.startTime).format('HH:mm');
+            getInterval.endTime = moment(formattedInterval.endTime).format('HH:mm');
             getInterval.status = formattedInterval.status;
             intervals.push(getInterval);
         })
 
-        return new SuccessResponse<GetBookingResponse>(200, 'Booking availability returned Successfully', intervals);
+        return new SuccessResponse<GetBookingResponse>(StatusCodes.OK, 'Booking availability returned Successfully', intervals);
     }
 
-    public async addUser(eventId: string, addUser: AddUserDTO): Promise<SuccessResponse<BookingResponse>> {
+    public async addInvitee(eventId: string, addUser: AddInviteeDTO): Promise<SuccessResponse<MeetingResponse>> {
         let valid = false;
         let intervalsIndex = 0;
-        const intervalCheck = moment(addUser.date).set({
-            'h': addUser.startTime.getHours(), 
-            'm': addUser.startTime.getMinutes()
-        });
+        const intervalCheck = moment(addUser.start);
 
-        const intervals = await this.getIntervals(eventId, addUser.date);
+        const intervals = await this.getIntervals(eventId, addUser.start);
 
         while (intervalsIndex < intervals.length) {
             if (intervalCheck.isSame(intervals[intervalsIndex].startTime) 
             && intervals[intervalsIndex].status == TimeStatus.unavailable) {
-                throw new HttpException(400, 'Chosen time not available');
+                throw new HttpException(StatusCodes.BAD_REQUEST, 'Chosen time not available');
             } else if(intervalCheck.isSame(intervals[intervalsIndex].startTime)) {
                 valid = true;
                 break
@@ -78,32 +74,34 @@ export default class BookingService implements IBookingService {
             intervalsIndex++;
         }
 
-        if (!valid) throw new HttpException(400, 'Invalid start time');
+        if (!valid) throw new HttpException(StatusCodes.BAD_REQUEST, 'Invalid start time');
 
         const eventData = await this.addEventToGoogleCalendar(eventId, intervalCheck, addUser.email)
         
-        const meeting = await this._repository.Meeting.create({
+        const meeting = this._repository.Meeting.create({
             googleCalendarId: eventData.googleData.data.iCalUID,
             googleEventId: eventData.googleData.data.id,
             user: eventData.event.user,
-            event: eventId,
-            startTime: eventData.googleData.data.start?.dateTime,
-            endTime: eventData.googleData.data.end?.dateTime,
-            attendee: {name: addUser.name, email: addUser.email}
+            type: eventData.event.type,
+            description: eventData.event.description,
+            summary: eventData.event.summary,
+            start: new Date(eventData.googleData.data.start?.dateTime!),
+            end: new Date(eventData.googleData.data.end?.dateTime!),
+            invitee: [{name: addUser.name, email: addUser.email}]
         })
 
-        const addUserResponseDto = mapper.map(meeting, Meeting, BookingResponse);
-        addUserResponseDto.eventDetails = mapper.map(eventData.event, Event, EventResponse);
+        await meeting.save();
+        const addUserResponseDto = mapper.map(meeting, Meeting, MeetingResponse);
         
-        return new SuccessResponse<BookingResponse>(200, 'Invitee added successfully', addUserResponseDto)
+        return new SuccessResponse<MeetingResponse>(StatusCodes.OK, 'Invitee added successfully', addUserResponseDto)
     }
 
     private async getIntervals(eventId: string, inputDate: Date ): Promise<Array<FreeInterval>> {
         const event = await this._repository.Event.findById(eventId);
-        if (!event) throw new HttpException(404, 'Event not found');
+        if (!event) throw new HttpException(StatusCodes.NOT_FOUND, 'Event not found');
 
         const user = await this._repository.User.findById(event.user);
-        if (!user) throw new HttpException(404, 'User not found');
+        if (!user) throw new HttpException(StatusCodes.NOT_FOUND, 'User not found');
 
         const calendarId = user.email;
         const data = await this.getGoogleCalendar(user.email, user.googleRefreshToken, inputDate);
@@ -164,7 +162,7 @@ export default class BookingService implements IBookingService {
             return data;
         } catch(error) {
             logger.error(`Error from Booking FreeBusy Query(Invalid Parameters):: ${error}`);
-            throw new HttpException(400, 'Error processing this request');
+            throw new HttpException(StatusCodes.INTERNAL_SERVER_ERROR, 'Error processing this request');
         }
     }
 
@@ -253,7 +251,7 @@ export default class BookingService implements IBookingService {
                   }
             })
 
-            return { googleData: data, event: event} ;
+            return { googleData: data, event: event};
         } catch (error) {
             logger.error(`Error from Booking >> Inserting into Google Calendar(Invalid Parameters):: ${error}`);
             throw new HttpException(400, 'Error processing this request');   

@@ -20,10 +20,10 @@ const eventSchema = new Schema<Event>({
         type: Number,
         required: true
     },
-    eventType: {
+    type: {
         type: String,
         enum: EventType,
-        default: EventType.thirtyMins
+        default: EventType.standardEvent
     },
     description: {
         type: String,
@@ -37,7 +37,7 @@ const eventSchema = new Schema<Event>({
         type: String,
         required: true
     }
-})
+}, { timestamps: true })
 
 const EventModel = model<Event>('Event', eventSchema)
 

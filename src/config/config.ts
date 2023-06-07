@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { google } from 'googleapis';
+import { LoggedInUser } from '../dtos/UserDTO';
 
 export const oauth2Client = new google.auth.OAuth2(
     process.env.CLIENT_ID,
@@ -24,6 +25,6 @@ export const jwt_secret = process.env.JWT_SECRET;
 
 declare module 'express-serve-static-core' {
     interface Request {
-        user: object;
+        user: LoggedInUser;
     }
 }

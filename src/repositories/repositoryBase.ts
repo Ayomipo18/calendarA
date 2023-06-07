@@ -9,7 +9,7 @@ import {
     QueryWithHelpers,
     HydratedDocument,
     ProjectionType,
-    SaveOptions
+    AnyObject
 } from 'mongoose';
 import { UpdateResult, DeleteResult } from "./modelTypes";
 import IRepository from './interfaces/irepositoryBase';
@@ -21,12 +21,8 @@ export class RepositoryBase<T extends Document> implements IRepository<T> {
         this._model = model;
     }
 
-    async create(doc: T | object): Promise<HydratedDocument<T>> {
-        return await this._model.create(doc);
-    }
-
-    async bulkCreate(docs: Array<T | object>, options?: SaveOptions): Promise<HydratedDocument<T>[]> {
-        return this._model.create(docs, options);
+    create(doc: object): HydratedDocument<T> {
+        return new this._model(doc)
     }
     
     findOne(condition: FilterQuery<T>, projection?: ProjectionType<T>, options?: QueryOptions): 

@@ -20,3 +20,13 @@ export class GetGoogleUser {
     public data: any;
     public refreshToken: string | null | undefined;
 }
+
+export class LoggedInUser {
+    public id: string;
+    public email: string
+
+    constructor(id: string, email: string) {
+        this.id = id;
+        this.email = email;
+    }
+}
