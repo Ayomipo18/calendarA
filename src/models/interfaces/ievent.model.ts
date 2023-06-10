@@ -1,5 +1,4 @@
-import { Types, Document } from 'mongoose';
-import { EventType } from '../../helpers/constants';
+import { Types } from 'mongoose';
 import { AutoMap } from '@automapper/classes'
 
 export class Event{

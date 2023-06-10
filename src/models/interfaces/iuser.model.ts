@@ -1,8 +1,7 @@
-import { Document } from "mongoose";
 import { Types } from "mongoose";
 import { AutoMap } from '@automapper/classes'
 
-export class User extends Document {
+export class User {
     @AutoMap()
     _id: Types.ObjectId;
 

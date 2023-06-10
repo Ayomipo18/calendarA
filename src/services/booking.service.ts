@@ -22,8 +22,6 @@ import { mapper } from '../mappings/mapper';
 import { Meeting } from "../models/interfaces/imeeting.model";
 import { StatusCodes } from 'http-status-codes';
 
-const { intervalBreak } = event;
-
 @injectable()
 export default class BookingService implements IBookingService {
     private _repository;

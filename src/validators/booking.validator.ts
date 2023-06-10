@@ -8,6 +8,9 @@ export const bookingValidator = {
     getAvailabilitySchema: joi.object({
         date: joi.date().iso()
     }),
+    eventIdParamsSchema: joi.object({
+        eventId: joi.string().hex().length(24).message('Must be a valid Id')
+    }),
     addInviteeSchema: joi.object({
         email: joi.string().email().required(),
         name: joi.string().required(),

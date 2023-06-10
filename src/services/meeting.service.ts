@@ -30,7 +30,9 @@ export default class MeetingService implements IMeetingService {
             })
         }
 
-        if (meetingParameters.type && meetingParameters.type.length > 0) {
+        if (meetingParameters.type && typeof meetingParameters.type === 'string') {
+            meetingsQuery.where({ type: meetingParameters.type })
+        } else if(meetingParameters.type && meetingParameters.type.length > 0) {
             meetingsQuery.where({
                 type: {
                     $in : meetingParameters.type
@@ -49,7 +51,9 @@ export default class MeetingService implements IMeetingService {
             })
         }
 
-        if (meetingParameters.inviteeEmail && meetingParameters.inviteeEmail.length > 0) {
+        if (meetingParameters.inviteeEmail && typeof meetingParameters.inviteeEmail === 'string') {
+            meetingsQuery.where({ 'invitee.email': meetingParameters.inviteeEmail })
+        } else if (meetingParameters.inviteeEmail && meetingParameters.inviteeEmail.length > 0) {
             meetingsQuery.where({
                 'invitee.email': {
                     $in: meetingParameters.inviteeEmail

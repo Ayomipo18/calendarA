@@ -50,7 +50,7 @@ export default class EventController {
         try {
             const updateEventDTO: UpdateEventDTO = req.body;
             const loggedInUser: LoggedInUser = req.user;
-            const data = await this._service.Event.updateEvent(updateEventDTO, req.params.eventId, loggedInUser);
+            const data = await this._service.Event.updateEvent(updateEventDTO, req.params.id, loggedInUser);
             return res.status(data.status).json({data: data.data, message: data.message});
         } catch(error) {
             next(error);
@@ -60,7 +60,7 @@ export default class EventController {
     public async deleteEvent(req: ValidatedRequest<getEventSchema>, res: Response, next: NextFunction): Promise<any>{
         try {
             const loggedInUser: LoggedInUser = req.user;
-            const data = await this._service.Event.deleteEvent(req.params.eventId, loggedInUser);
+            const data = await this._service.Event.deleteEvent(req.params.id, loggedInUser);
             return res.status(data.status).json({data: data.data, message: data.message});
         } catch(error) {
             next(error);
@@ -70,7 +70,7 @@ export default class EventController {
     public async getEvent(req: ValidatedRequest<getEventSchema>, res: Response, next: NextFunction): Promise<any>{
         try {
             const loggedInUser: LoggedInUser = req.user;
-            const data = await this._service.Event.getEvent(req.params.eventId, loggedInUser);
+            const data = await this._service.Event.getEvent(req.params.id, loggedInUser);
             return res.status(data.status).json({data: data.data, message: data.message});
         } catch(error) {
             next(error);

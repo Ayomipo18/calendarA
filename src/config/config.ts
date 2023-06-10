@@ -19,9 +19,13 @@ export const calendar = google.calendar('v3');
 
 export const profileURL = process.env.PROFILE_URL;
 
-export const swagger_url = process.env.SWAGGER_URL;
-
 export const jwt_secret = process.env.JWT_SECRET;
+
+export const config = {
+    apiVersion : process.env.API_VERSION,
+    port: process.env.PORT, 
+    apiUrl: process.env.API_URL
+}
 
 declare module 'express-serve-static-core' {
     interface Request {

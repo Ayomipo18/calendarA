@@ -1,9 +1,9 @@
 import SuccessResponse from "../../helpers/SuccessResponse";
 import { UserLoginResponse } from "../../dtos/UserDTO";
-import { AuthDTO, AuthTokenDTO, AuthTokenResponse } from "../../dtos/AuthDTO";
+import { AuthDTO, AuthUrlResponse, AuthTokenDTO, AuthTokenResponse } from "../../dtos/AuthDTO";
 
 export default interface IAuthService {
-    authorize(): Promise<SuccessResponse<string>>;
+    authorize(): Promise<SuccessResponse<AuthUrlResponse>>;
     getGoogleUser(inputCode: AuthDTO): Promise<SuccessResponse<UserLoginResponse>>;
     refreshToken(token: AuthTokenDTO): Promise<SuccessResponse<AuthTokenResponse>>;
 }

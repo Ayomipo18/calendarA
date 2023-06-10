@@ -10,14 +10,18 @@ export const meetingValidator = {
         pageNumber: joi.number().min(1),
         pageSize: joi.number().min(1),
         search: joi.string(),
-        sort: joi.string().regex(/^(-)?[a-z]+$/)
-        .message('Inavlid format, Only formats allowed are -yourSortValue or yourSortValue'),
-        type: joi.array().items(joi.string().valid(...Object.values(EventType))),
-        summary: joi.string(),
-        description: joi.string(),
-        inviteeEmail: joi.array().items(joi.string().email()),
+        sort: joi.string().regex(/^(-)?[a-zA-Z]+$/)
+        .message('Inavlid format, Only formats allowed are -yourSortField or yourSortField'),
+        type: joi.alternatives(
+            joi.array().items(joi.string().valid(...Object.values(EventType))),
+            joi.string().valid(...Object.values(EventType))
+        ),
+        inviteeEmail: joi.alternatives(
+            joi.array().items(joi.string().email()),
+            joi.string().email()
+        ),
         minStart: joi.date().iso(),
-        maxEnd: joi.date().iso()
+        maxEnd: joi.date().min(joi.ref('minStart')).iso().required(),
     })
 }
 
@@ -27,10 +31,8 @@ export interface meetingResourceSchema extends ValidatedRequestSchema {
         pageSize: number,
         search: string,
         sort: string,
-        type: Array<string>,
-        summary: string,
-        description: string,
-        inviteeEmail: Array<string>,
+        type: Array<string> | string,
+        inviteeEmail: Array<string> | string,
         minStart: Date,
         maxEnd: Date
     }

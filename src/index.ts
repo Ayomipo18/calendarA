@@ -2,12 +2,11 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import swaggerUi from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
-import 'dotenv/config';
 import connectDB from './config/db'
 import route from './routes/index';
 import ErrorHandler from './middlewares/error.middleware'
 import logger from './logger';
-import { swagger_url } from './config/config';
+import { config } from './config/config';
 
 const app: Application = express();
 
@@ -24,12 +23,19 @@ const options = {
       name: "ISC",
     },
     contact: {
-      name: "Ayomipo",
+      name: "Ayomipo Solaja",
       email: "ayomiposolaja@email.com",
     },
     schemes: ["http", "https"],
     servers: [
-      { url: `${swagger_url}` }
+      { 
+        url: `${config.apiUrl}/{version}`,
+        variables: {
+          version: {
+            default: config.apiVersion
+          }
+        }
+      }
     ],
   },
   apis: [
@@ -45,18 +51,18 @@ app.use(express.json());
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs, { explorer: true }));
 
-app.use('/v1', route)
+app.use(`/${config.apiVersion}`, route)
 
 app.use(ErrorHandler)
 
 app.get('/', (req, res) => {
-  return res.json('Welcome to calendara');
+  return res.json('Welcome to CalendarA API');
 })
 
 try {
   app.listen(PORT, async(): Promise<void> => {
     await connectDB();
-    logger.info(`Connected successfully on port ${PORT}`);
+    logger.info(`Connected successfully on port ${config.port}`);
   });
 } catch (error: any) {
     logger.error(`Error occurred: ${error}`);

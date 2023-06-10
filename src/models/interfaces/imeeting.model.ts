@@ -1,8 +1,7 @@
 import { Types } from 'mongoose';
-import { Document } from "mongoose";
 import { AutoMap } from '@automapper/classes'
 
-export class Meeting extends Document {
+export class Meeting{
     googleCalendarId: string
     googleEventId: string
 

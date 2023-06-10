@@ -18,24 +18,24 @@ eventRouter.post(
 )
 
 eventRouter.put(
-    '/:eventId',
+    '/:id',
     isLoggedIn,
-    validator.params(eventValidator.eventIdParamsSchema),
+    validator.params(eventValidator.idParamsSchema),
     validator.body(eventValidator.createEventSchema),
     eventController.updateEvent.bind(eventController)
 )
 
 eventRouter.delete(
-    '/:eventId',
+    '/:id',
     isLoggedIn,
-    validator.params(eventValidator.eventIdParamsSchema),
+    validator.params(eventValidator.idParamsSchema),
     eventController.deleteEvent.bind(eventController)
 )
 
 eventRouter.get(
-    '/:eventId',
+    '/:id',
     isLoggedIn,
-    validator.params(eventValidator.eventIdParamsSchema),
+    validator.params(eventValidator.idParamsSchema),
     eventController.getEvent.bind(eventController)
 )
 

@@ -1,4 +1,4 @@
-import mongoose, { ClientSession } from 'mongoose';
+import mongoose, { ClientSession, Types } from 'mongoose';
 import IRepositoryManager from '../repositories/interfaces/irepositoryManager';
 import IAuthService from './interfaces/iauth.service';
 import axios from 'axios';
@@ -14,7 +14,7 @@ import { event, jwtDetails } from '../helpers/constants'
 import { GetGoogleUser, UserLoginResponse } from '../dtos/UserDTO';
 import { mapper } from '../mappings/mapper';
 import { User } from '../models/interfaces/iuser.model';
-import { AuthDTO, AuthTokenDTO, AuthTokenResponse } from '../dtos/AuthDTO';
+import { AuthDTO, AuthUrlResponse, AuthTokenDTO, AuthTokenResponse } from '../dtos/AuthDTO';
 import { StatusCodes } from 'http-status-codes';
 
 @injectable()
@@ -25,7 +25,7 @@ export default class AuthService implements IAuthService {
         this._repository = repository;
     }
 
-    public async authorize(): Promise<SuccessResponse<string>> {
+    public async authorize(): Promise<SuccessResponse<AuthUrlResponse>> {
         try {
             // Access scopes for read/write google user email, profile and calendar activity.
             const scopes = [
@@ -41,7 +41,7 @@ export default class AuthService implements IAuthService {
                 prompt: 'consent'
             });
 
-            return new SuccessResponse<string>(StatusCodes.OK, "Paste this link in your browser to authorize CalendarA", url)
+            return new SuccessResponse<AuthUrlResponse>(StatusCodes.OK, "Paste this link in your browser to authorize CalendarA", url)
         } catch (error) {
             logger.error(`Error generating url:: ${error}`);
             throw new HttpException(StatusCodes.INTERNAL_SERVER_ERROR, 'Something went wrong')
@@ -151,7 +151,8 @@ export default class AuthService implements IAuthService {
         }
     }
 
-    private async generateToken(user: User, populate: boolean) {
+    private async generateToken(user: mongoose.Document<unknown, {}, User> & Omit<User & Required<{
+        _id: Types.ObjectId; }>, never>, populate: boolean) {
         const tokenDetails = {
             id: user.id,
             email: user.email

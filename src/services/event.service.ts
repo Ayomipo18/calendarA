@@ -34,7 +34,9 @@ export default class EventService implements IEventService {
             })
         }
 
-        if (eventParameters.type && eventParameters.type.length > 0) {
+        if (eventParameters.type && typeof eventParameters.type === 'string') {
+            eventsQuery.where({ type: eventParameters.type })
+        } else if (eventParameters.type && eventParameters.type.length > 0) {
             eventsQuery.where({
                 type: {
                     $in : eventParameters.type

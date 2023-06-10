@@ -1,259 +1,683 @@
+components:
+  schemas:
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+
+    AuthUrlResponse:
+      type: string
+
+    AuthUrlResponseSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        data: 
+          $ref: '#components/schemas/AuthUrlResponse'
+
+
+    AuthDTO:
+      type: object
+      properties:
+        code: 
+          type: string
+          required: true
+
+    UserLoginResponse:
+      type: object
+      properties:
+        name: 
+          type: string
+        email: 
+          type: string
+        _id: 
+          type: string
+          format: hex
+        accessToken: 
+          type: string
+        refreshoken: 
+          type: string
+
+    UserLoginSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        data: 
+          $ref: '#components/schemas/UserLoginResponse'
+
+    AuthTokenDTO:
+      type: object
+      properties:
+        accessToken: 
+          type: string
+        refreshToken: 
+          type: string
+
+    AuthTokenResponse:
+      $ref: '#components/schemas/AuthTokenDTO'
+
+    AuthTokenResponseSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        data: 
+          $ref: '#components/schemas/AuthTokenResponse'
+
+    GetBookingResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          startTime: 
+            type: string
+          endTime: 
+            type: string
+          status: 
+            type: string
+
+    GetBookingResponseSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        data: 
+          $ref: '#components/schemas/GetBookingResponse'
+
+    AddInviteeDTO:
+      type: object
+      properties:
+        name: 
+          type: string
+        email: 
+          type: string
+          format: email
+        start: 
+          type: string
+          format: date-time
+
+    MeetingResponse:
+      type: object
+      properties:
+        _id: 
+          type: string
+          format: hex
+        invitee: 
+          type: array
+          items:
+            type: object
+            properties:
+              name: 
+                type: string
+              email: 
+                type: string
+                format: email              
+        start: 
+          type: string
+          format: date-time
+        end: 
+          type: string
+          format: date-time
+        type: 
+          type: string
+        description: 
+          type: string
+        summary:  
+          type: string
+        host: 
+          type: string
+          format: hex
+
+    MeetingResponseSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        data: 
+          $ref: '#components/schemas/MeetingResponse'
+
+    MeetingResponsePagedResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#components/schemas/MeetingResponse'
+        meta:
+          $ref: '#components/schemas/Meta'
+
+    CreateEventDTO:
+      type: object
+      properties:  
+        durationInMins:
+          type: integer
+          format: int32
+        intervalBreak:
+          type: integer
+          format: int32
+        startTime: 
+          type: string
+          format: date-time
+        endTime: 
+          type: string
+          format: date-time
+        type: 
+          type: string
+        description: 
+          type: string
+        summary:  
+          type: string
+        slug:  
+          type: string
+
+    UpdateEventDTO:
+      $ref: '#components/schemas/CreateEventDTO'
+
+    EventResponse:
+      type: object
+      properties:
+        _id: 
+          type: string
+          format: hex     
+        durationInMins:
+          type: integer
+          format: int32
+        intervalBreak:
+          type: integer
+          format: int32
+        startTime: 
+          type: string
+          format: date-time
+        endTime: 
+          type: string
+          format: date-time
+        type: 
+          type: string
+        description: 
+          type: string
+        summary:  
+          type: string
+        user: 
+          type: string
+          format: hex
+        slug:  
+          type: string
+
+    EventResponseSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        data: 
+          $ref: '#components/schemas/EventResponse'
+
+    EventResponsePagedResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#components/schemas/EventResponse'
+        meta:
+          $ref: '#components/schemas/Meta'
+
+    Meta:
+      type: object
+      properties:
+        nextPage: 
+          type: integer
+          format: int32
+          nullable: true
+        previousPage: 
+          type: integer
+          format: int32
+          nullable: true
+        totalPages: 
+          type: integer
+          format: int32
+        pageSize: 
+          type: integer
+          format: int32
+        total: 
+          type: integer
+          format: int32         
+
+    EventType:
+      type: array
+      items: 
+        type: string
+
+  parameters:
+
+    googleAuthCodeParameter:
+      in: query
+      name: code
+      description: google auth code
+      schema:
+        type: string
+      required: true
+
+    getAvailabilityParameter:
+      in: query
+      name: date
+      description: date to get availability
+      schema:
+        type: string
+        format: date
+
+    eventIdParameter:
+      in: path
+      name: eventId
+      description: eventId to make a booking
+      schema:
+        type: string
+        format: hex
+      required: true
+
+    idParameter:
+      in: path
+      name: id
+      description: id for path
+      schema:
+        type: string
+        format: hex
+      required: true
+
+    pageNumberParameter:
+      in: query
+      name: pageNumber
+      description: Page Number to retrieve
+      schema:
+        type: integer
+        minimum: 1
+        format: int32
+
+    pageSizeParameter:
+      in: query
+      name: pageSize
+      description: Page Size to retrieve
+      schema:
+        type: integer
+        minimum: 1
+        format: int32
+
+    searchParameter:
+      in: query
+      name: search
+      description: search value
+      schema:
+        type: string
+
+    sortParameter:
+      in: query
+      name: sort
+      description: Field to sort by. Only formats allowed are -yourSortField or yourSortField
+      schema:
+        type: string
+
+    eventTypeParameter:
+      in: query
+      name: type
+      description: EventType to filter by
+      schema:
+        $ref: '#components/schemas/EventType'
+      style: form
+      explode: true
+
+    inviteeEmailParameter:
+      in: query
+      name: inviteeEmail
+      description: inviteeEmail to filter by
+      schema:
+        type: array
+        items: 
+          type: string
+          format: email
+      style: form
+      explode: true
+
+    minStartParameter:
+      in: query
+      name: minStart
+      description: Min Start DateTime
+      schema: 
+        type: string
+        format: date-time
+
+    maxEndParameter:
+      in: query
+      name: maxEnd
+      description: Max End DateTime
+      schema: 
+        type: string
+        format: date-time
+
+  responses:
+
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    InternalServerError:
+      description: Error occurred while processing this request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
 tags:
 - name: Auth
   description: Auth API
 
-- name: Calendar
-  description: Calendar API
+- name: Booking
+  description: Booking API
 
-- name: User
-  description: User API
+- name: Meeting
+  description: Meeting API
 
-# paths:
-#   /api/v1/videos:
-#     # [GET] videos
-#     get:
-#       tags:
-#       - videos
-#       summary: Find All Videos
-#       responses:
-#         200:
-#           description: 'OK'
-#         500:
-#           description: 'Server Error'
+- name: Event
+  description: Event API
 
-#     # [POST] videos
-#     post:
-#       tags:
-#       - videos
-#       summary: Add Video
-#       parameters:
-#       - name: body
-#         in: body
-#         description: video Data
-#         required: true
-#         schema:
-#           $ref: '#/definitions/videos'
-#       responses:
-#         201:
-#           description: 'Created'
-#         400:
-#           description: 'Bad Request'
-#         409:
-#           description: 'Conflict'
-#         500:
-#           description: 'Server Error'
+paths:
+  /auth/google:
+    get:
+      tags:
+      - Auth
+      description: Returns google auth url. Use this link to Login and Authorize CalendarA to access your google details.
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/AuthUrlResponseSuccessResponse'
+                example:
+                  $ref: '#components/schemas/AuthUrlResponseSuccessResponse'
 
-# # [GET] videos/id
-#   /api/v1/videos/{id}:
-#     get:
-#       tags:
-#       - videos
-#       summary: Find Video By Id
-#       parameters:
-#       - name: id
-#         in: path
-#         description: Video Id
-#         required: true
-#       responses:
-#         200:
-#           description: 'OK'
-#         409:
-#           description: 'Conflict'
-#         500:
-#           description: 'Server Error'
+  /auth/google/callback:
+    get:
+      tags:
+      - Auth
+      description: Returns user profile, auth details. This is a callback function from /auth/google.
+      parameters:
+        - $ref: '#components/parameters/googleAuthCodeParameter'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/UserLoginSuccessResponse'
+                example:
+                  $ref: '#components/schemas/UserLoginSuccessResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        500:
+          $ref: '#components/responses/InternalServerError'
 
-# # [PUT] videos/id
-#     put:
-#       tags:
-#       - videos
-#       summary: Update Video By Id
-#       parameters:
-#       - name: id
-#         in: path
-#         description: video Id
-#         required: true
-#       - name: body
-#         in: body
-#         description: video Data
-#         required: true
-#         schema:
-#           $ref: '#/definitions/videos'
-#       responses:
-#         200:
-#           description: 'OK'
-#         400:
-#           description: 'Bad Request'
-#         409:
-#           description: 'Conflict'
-#         500:
-#           description: 'Server Error'
+  /auth/token/refresh:
+    post:
+      tags:
+      - Auth
+      description: Refreshes the access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthTokenDTO'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/AuthTokenResponseSuccessResponse'
+                example:
+                  $ref: '#components/schemas/AuthTokenResponseSuccessResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
 
-# # [DELETE] videos/id
-#     delete:
-#       tags:
-#       - videos
-#       summary: Delete Video By Id
-#       parameters:
-#       - name: id
-#         in: path
-#         description: video Id
-#         required: true
-#       responses:
-#         200:
-#           description: 'OK'
-#         409:
-#           description: 'Conflict'
-#         500:
-#           description: 'Server Error'
+  /booking/event/{eventId}:
+    get:
+      tags:
+      - Booking
+      description: Returns host availability
+      parameters:
+        - $ref: '#components/parameters/eventIdParameter'
+        - $ref: '#components/parameters/getAvailabilityParameter'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/GetBookingResponseSuccessResponse'
+                example:
+                  $ref: '#components/schemas/GetBookingResponseSuccessResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        404:
+          $ref: '#components/responses/NotFound'
+        500:
+          $ref: '#components/responses/InternalServerError'
 
-#   /api/v1/channels:
-#     # [GET] channels
-#     get:
-#       tags:
-#         - channels
-#       summary: Find All Channels
-#       responses:
-#         200:
-#           description: 'OK'
-#         500:
-#           description: 'Server Error'
+    post:
+      tags:
+      - Booking
+      description: Books the invitee
+      parameters:
+        - $ref: '#components/parameters/eventIdParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddInviteeDTO'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/MeetingResponseSuccessResponse'
+                example:
+                  $ref: '#components/schemas/MeetingResponseSuccessResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        404:
+          $ref: '#components/responses/NotFound'
+        500:
+          $ref: '#components/responses/InternalServerError'
 
-#     # [POST] channels
-#     post:
-#       tags:
-#         - channels
-#       summary: Add Channel
-#       parameters:
-#         - name: body
-#           in: body
-#           description: channel Data
-#           required: true
-#           schema:
-#             $ref: '#/definitions/channels'
-#       responses:
-#         201:
-#           description: 'Created'
-#         400:
-#           description: 'Bad Request'
-#         409:
-#           description: 'Conflict'
-#         500:
-#           description: 'Server Error'
+  /meetings:
+    get:
+      tags:
+      - Meeting
+      description: Returns scheduled meetings for a host
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#components/parameters/pageNumberParameter'
+        - $ref: '#components/parameters/pageSizeParameter'
+        - $ref: '#components/parameters/searchParameter'
+        - $ref: '#components/parameters/sortParameter'
+        - $ref: '#components/parameters/eventTypeParameter'
+        - $ref: '#components/parameters/inviteeEmailParameter'
+        - $ref: '#components/parameters/minStartParameter'
+        - $ref: '#components/parameters/maxEndParameter'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/MeetingResponsePagedResponse'
+                example:
+                  $ref: '#components/schemas/MeetingResponsePagedResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        401:
+          $ref: '#components/responses/Unauthorized'
 
-#   # [GET] channels/id
-#   /api/v1/channels/{id}:
-#     get:
-#       tags:
-#         - channels
-#       summary: Find Channel By Id
-#       parameters:
-#         - name: id
-#           in: path
-#           description: Channel Id
-#           required: true
-#       responses:
-#         200:
-#           description: 'OK'
-#         409:
-#           description: 'Conflict'
-#         500:
-#           description: 'Server Error'
+  /events:
+    get:
+      tags:
+      - Event
+      description: Returns evevnt for a user
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#components/parameters/pageNumberParameter'
+        - $ref: '#components/parameters/pageSizeParameter'
+        - $ref: '#components/parameters/searchParameter'
+        - $ref: '#components/parameters/sortParameter'
+        - $ref: '#components/parameters/eventTypeParameter'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/EventResponsePagedResponse'
+                example:
+                  $ref: '#components/schemas/EventResponsePagedResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        401:
+          $ref: '#components/responses/Unauthorized'
 
-#     # [PUT] channels/id
-#     put:
-#       tags:
-#         - channels
-#       summary: Update Channel By Id
-#       parameters:
-#         - name: id
-#           in: path
-#           description: channel Id
-#           required: true
-#         - name: body
-#           in: body
-#           description: channel Data
-#           required: true
-#           schema:
-#             $ref: '#/definitions/channels'
-#       responses:
-#         200:
-#           description: 'OK'
-#         400:
-#           description: 'Bad Request'
-#         409:
-#           description: 'Conflict'
-#         500:
-#           description: 'Server Error'
+    post:
+      tags:
+      - Event
+      description: Creates an event
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEventDTO'
+      responses:
+        201:
+          description: 'Created'
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/EventResponseSuccessResponse'
+                example:
+                  $ref: '#components/schemas/EventResponseSuccessResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        401:
+          $ref: '#components/responses/Unauthorized'
+        404:
+          $ref: '#components/responses/NotFound'
 
-#     # [DELETE] channels/id
-#     delete:
-#       tags:
-#         - channels
-#       summary: Delete Channel By Id
-#       parameters:
-#         - name: id
-#           in: path
-#           description: channel Id
-#           required: true
-#       responses:
-#         200:
-#           description: 'OK'
-#         409:
-#           description: 'Conflict'
-#         500:
-#           description: 'Server Error'
+  /events/{id}:
+    get:
+      tags:
+      - Event
+      description: Returns an event for a user
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#components/parameters/idParameter'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/EventResponseSuccessResponse'
+                example:
+                  $ref: '#components/schemas/EventResponseSuccessResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        401:
+          $ref: '#components/responses/Unauthorized'
+        404:
+          $ref: '#components/responses/NotFound'
 
-# # definitions
-# definitions:
-#   videos:
-#     type: object
-#     required:
-#         - title
-#         - url
-#         - accessType
-#         - size
-#         - ownerId
-#         - channelId
-#     properties:
-#       title:
-#         type: string
-#         description: video title
-#       url:
-#         type: string
-#         description: video url
-#       accessType:
-#         type: boolean
-#         description: video access
-#       size:
-#         type: number
-#         description: video size
-#       ownerId:
-#         type: string
-#         description: video owner id
-#       channelId:
-#         type: string
-#         description: channel id
+    put:
+      tags:
+      - Event
+      description: Updates an event
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#components/parameters/idParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEventDTO'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/EventResponseSuccessResponse'
+                example:
+                  $ref: '#components/schemas/EventResponseSuccessResponse'
+        400:
+          $ref: '#components/responses/BadRequest'
+        401:
+          $ref: '#components/responses/Unauthorized'
+        404:
+          $ref: '#components/responses/NotFound'
 
-#   channels:
-#     type: object
-#     required:
-#       - title
-#       - bannerUrl
-#       - isPublic
-#       - ownerId
-#     properties:
-#       title:
-#         type: string
-#         description: channel title
-#       bannerUrl:
-#         type: string
-#         description: banner url
-#       isPublic:
-#         type: boolean
-#         description: public access
-#       ownerId:
-#         type: string
-#         description: video owner id
+    delete:
+      tags:
+      - Event
+      description: deletes an event
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#components/parameters/idParameter'
+      responses:
+        204:
+          description: 'No Content'
+        400:
+          $ref: '#components/responses/BadRequest'
+        401:
+          $ref: '#components/responses/Unauthorized'
+        404:
+          $ref: '#components/responses/NotFound'
 
 schemes:
  - https

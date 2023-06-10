@@ -9,7 +9,7 @@ import { StatusCodes } from 'http-status-codes';
 export const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
     let token;
     const authHeader = req.headers['authorization'];
-    if(!authHeader) throw new HttpException(StatusCodes.BAD_REQUEST, 'No Header provided');
+    if(!authHeader) throw new HttpException(StatusCodes.UNAUTHORIZED, 'Unauthorized');
 
     if (authHeader.startsWith('Bearer ')) {
         token = authHeader.substring(7, authHeader.length);
