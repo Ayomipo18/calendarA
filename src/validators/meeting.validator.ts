@@ -21,7 +21,7 @@ export const meetingValidator = {
             joi.string().email()
         ),
         minStart: joi.date().iso(),
-        maxEnd: joi.date().min(joi.ref('minStart')).iso().required(),
+        maxEnd: joi.date().min(joi.ref('minStart')).iso(),
     })
 }
 

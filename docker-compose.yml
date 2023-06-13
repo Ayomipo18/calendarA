@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  calendara:
+  calendara-dev:
     environment:
       - NODE_ENV=development
     build:
@@ -9,9 +9,6 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - ./:/app
-    container_name: calendara
-    expose:
-      - '3000'
     ports:
-      - '3000:3000'
+      - "3000:3000"
     command: npm run dev

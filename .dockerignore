@@ -1,9 +1,14 @@
-Dockerfile
+Dockerfile.*
 docker*.yml
+calendara.yaml
 
 .git
 .gitignore
 .config
+.env
+.envexample
+build
+logs
 
 .npm
 .vscode
