@@ -3,4 +3,5 @@ build
 .env
 logs
 calendara.yaml
+docker-compose.prod.yml
 package-lock.json
