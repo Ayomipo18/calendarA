@@ -4,13 +4,15 @@
 
 - Reach out to me (ayomiposolaja@gmail) if you want to collaborate/contribute or have questions.
 
-- Deployed Url (Coming soon)
+- Deployed API Url documentation (https://calendara-api.azurewebsites.net/docs/)
 
-## How to run this project locally
+- Deployed API Url (https://calendara-api.azurewebsites.net/)
+
+## How to run this project locally without docker
 
 - clone this repository
 
-- set up your Google OAuth Client to get CLIENT_ID, CLIENT_SECRET, REDIRECT_URL, PROFILE_URL
+- use the envexample to set up the project
 
 - cd into the cloned repo
 
@@ -22,7 +24,31 @@ npm install
 ```bash
 npm run dev
 ```
+
 or 
+
+- run this command
+```bash
+npm install
+```
+```bash
+npm run build
+```
 ```bash
 npm run start
+```
+
+## How to run this project locally with docker
+
+- clone this repository
+
+- use the envexample to set up the project
+
+- cd into the cloned repo
+
+- ensure you have docker desktop installed
+
+- run this command
+```bash
+docker compose up
 ```
