@@ -97,7 +97,8 @@ export default class EventService implements IEventService {
             $or: [
                 {summary: updateEventDTO.summary}, {slug: updateEventDTO.slug}
             ],
-            user: loggedInUser.id
+            user: loggedInUser.id,
+            _id: {$not: {$eq: eventId} }
         })
         if (eventDuplicate) throw new HttpException(StatusCodes.BAD_REQUEST, 'Event exists already')
 
