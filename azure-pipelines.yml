@@ -12,7 +12,7 @@ variables:
 
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '96811205-78b3-41ee-8ce5-fed860f6b824'
-  imageRepository: 'calendara-api'
+  imageRepository: 'ayomipocalendara'
   containerRegistry: 'calendararegistry.azurecr.io'
   dockerfilePath: '**/Dockerfile.prod'
   tag: '$(Build.BuildId)'
