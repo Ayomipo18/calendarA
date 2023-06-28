@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: ayomipocalendara
+spec:
+    type: LoadBalancer
+    ports:
+    - port: 6822 
+    selector:
+        app: ayomipocalendara
