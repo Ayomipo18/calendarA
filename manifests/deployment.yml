@@ -15,5 +15,7 @@ spec:
       containers:
         - name: ayomipocalendara 
           image: calendararegistry.azurecr.io/ayomipocalendara
+          imagePullPolicy: Always
+          command: ["npm", "run", "start"]
           ports:
           - containerPort: 6822
