@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: ayomipocalendara 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ayomipocalendara
+  template:
+    metadata:
+      labels:
+        app: ayomipocalendara 
+    spec:
+      containers:
+        - name: ayomipocalendara 
+          image: calendararegistry.azurecr.io/ayomipocalendara
+          ports:
+          - containerPort: 6822
