@@ -19,8 +19,3 @@ spec:
           command: ["npm", "run", "start"]
           ports:
           - containerPort: 6822
-          env:
-          - name: PORT
-            value: PORT
-          - name: MONGO_URI
-            value: MONGO_URI
