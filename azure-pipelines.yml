@@ -143,7 +143,6 @@ stages:
               Write-Host "##vso[task.setvariable variable=API_URL;]$(API_URL)"
               Write-Host "##vso[task.setvariable variable=JWT_SECRET;]$(JWT_SECRET)"
               Write-Host "##vso[task.setvariable variable=API_VERSION;]$(API_VERSION)"
-              Write-Host "##vso[task.setvariable variable=PORT;]$(PORT)"
               message="Your review app has been deployed"
               if [ ! -z "$url" -a "$url" != "http://:" ]
               then
