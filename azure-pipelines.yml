@@ -99,6 +99,9 @@ stages:
               command: apply
               useConfigurationFile: true
               inline: '{ "kind": "Namespace", "apiVersion": "v1", "metadata": { "name": "$(k8sNamespaceForPR)" }}'
+            env:
+              PORT: $(PORT)
+              MONGO_URI: $(MONGO_URI)
 
           - task: KubernetesManifest@0
             displayName: Create imagePullSecret
