@@ -37,4 +37,4 @@ spec:
           - name: API_VERSION
             value: API_VERSION
           - name: PORT
-            value: PORT
+            value: "6822"
