@@ -120,6 +120,16 @@ stages:
                 $(imagePullSecret)
               containers: |
                 $(containerRegistry)/$(imageRepository):$(tag)
+            env:
+              CLIENT_ID: $(CLIENT_ID)
+              CLIENT_SECRET: $(CLIENT_SECRET)
+              REDIRECT_URL: $(REDIRECT_URL)
+              PROFILE_URL: $(PROFILE_URL)
+              MONGO_URI: $(MONGO_URI)
+              API_URL: $(API_URL)
+              JWT_SECRET: $(JWT_SECRET)
+              API_VERSION: $(API_VERSION)
+              PORT: $(PORT)
 
           - task: Kubernetes@1
             name: get
