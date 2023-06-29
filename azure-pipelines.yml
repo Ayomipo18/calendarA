@@ -151,3 +151,4 @@ stages:
               fi
               echo "##vso[task.setvariable variable=GITHUB_COMMENT]$message"
               echo $(API_URL) 
+              echo "Yooo"
