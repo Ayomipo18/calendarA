@@ -19,3 +19,22 @@ spec:
           command: ["npm", "run", "start"]
           ports:
           - containerPort: 6822
+          env:
+          - name: CLIENT_ID
+            value: $(CLIENT_ID)
+          - name: CLIENT_SECRET
+            value: $(CLIENT_SECRET)
+          - name: REDIRECT_URL
+            value: $(REDIRECT_URL)
+          - name: PROFILE_URL
+            value: $(PROFILE_URL)
+          - name: MONGO_URI
+            value: $(MONGO_URI)
+          - name: API_URL
+            value: $(API_URL)
+          - name: JWT_SECRET
+            value: $(JWT_SECRET)
+          - name: API_VERSION
+            value: $(API_VERSION)
+          - name: PORT
+            value: $(PORT)
