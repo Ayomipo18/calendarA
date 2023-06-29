@@ -233,6 +233,7 @@ export default class BookingService implements IBookingService {
             const data = await calendar.events.insert({
                 auth: getOAuth2Client(user.googleRefreshToken),
                 calendarId: user.email,
+                sendUpdates: 'all',
                 requestBody: {
                     summary: event.summary,
                     description: event.description,
