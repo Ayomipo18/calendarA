@@ -17,6 +17,7 @@ variables:
   dockerfilePath: '**/Dockerfile.prod'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'calendararegistry2093-auth'
+  PORT: '$(PORT)'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
