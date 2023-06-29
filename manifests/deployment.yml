@@ -36,5 +36,3 @@ spec:
             value: JWT_SECRET
           - name: API_VERSION
             value: API_VERSION
-          - name: PORT
-            value: "6822"
