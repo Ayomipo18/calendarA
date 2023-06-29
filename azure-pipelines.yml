@@ -17,7 +17,6 @@ variables:
   dockerfilePath: '**/Dockerfile.prod'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'calendararegistry2093-auth'
-  PORT: '6822'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -100,6 +99,9 @@ stages:
               command: apply
               useConfigurationFile: true
               inline: '{ "kind": "Namespace", "apiVersion": "v1", "metadata": { "name": "$(k8sNamespaceForPR)" }}'
+            env:
+              PORT: $(PORT)
+              MONGO_URI: $(MONGO_URI)
 
           - task: KubernetesManifest@0
             displayName: Create imagePullSecret
