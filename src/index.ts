@@ -59,6 +59,7 @@ app.get('/', (req, res) => {
 
 try {
   app.listen(PORT, async(): Promise<void> => {
+    console.log(config.port)
     await connectDB();
     logger.info(`Connected successfully on port ${config.port}`);
   });
