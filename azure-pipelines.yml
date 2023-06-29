@@ -17,7 +17,7 @@ variables:
   dockerfilePath: '**/Dockerfile.prod'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'calendararegistry2093-auth'
-  PORT: '$(PORT)'
+  PORT: '6822'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -143,6 +143,7 @@ stages:
               Write-Host "##vso[task.setvariable variable=API_URL;]$(API_URL)"
               Write-Host "##vso[task.setvariable variable=JWT_SECRET;]$(JWT_SECRET)"
               Write-Host "##vso[task.setvariable variable=API_VERSION;]$(API_VERSION)"
+              Write-Host "##vso[task.setvariable variable=PORT;]$(PORT)"
               message="Your review app has been deployed"
               if [ ! -z "$url" -a "$url" != "http://:" ]
               then
