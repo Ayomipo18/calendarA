@@ -81,6 +81,8 @@ stages:
                 $(containerRegistry)/$(imageRepository):$(tag)
 
   - deployment: DeployPullRequest
+    variables:
+      MONGO_URI: $(MONGO_URI) 
     displayName: Deploy Pull request
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/pull/'))
     pool:
@@ -99,6 +101,8 @@ stages:
               command: apply
               useConfigurationFile: true
               inline: '{ "kind": "Namespace", "apiVersion": "v1", "metadata": { "name": "$(k8sNamespaceForPR)" }}'
+            env:
+              PORT: $(PORT)    
 
           - task: KubernetesManifest@0
             displayName: Create imagePullSecret
@@ -120,9 +124,8 @@ stages:
                 $(imagePullSecret)
               containers: |
                 $(containerRegistry)/$(imageRepository):$(tag)
-                env:
-                  PORT: $(PORT)
-                  MONGO_URI: $(MONGO_URI)
+            env:
+              PORT: $(PORT)
 
           - task: Kubernetes@1
             name: get
