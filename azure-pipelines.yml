@@ -82,7 +82,7 @@ stages:
 
   - deployment: DeployPullRequest
     variables:
-      MONGO_URI: $(MONGO_URI) 
+      PORT: '6822'
     displayName: Deploy Pull request
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/pull/'))
     pool:
@@ -100,9 +100,7 @@ stages:
             inputs:
               command: apply
               useConfigurationFile: true
-              inline: '{ "kind": "Namespace", "apiVersion": "v1", "metadata": { "name": "$(k8sNamespaceForPR)" }}'
-            env:
-              PORT: $(PORT)    
+              inline: '{ "kind": "Namespace", "apiVersion": "v1", "metadata": { "name": "$(k8sNamespaceForPR)" }}'   
 
           - task: KubernetesManifest@0
             displayName: Create imagePullSecret
@@ -124,8 +122,6 @@ stages:
                 $(imagePullSecret)
               containers: |
                 $(containerRegistry)/$(imageRepository):$(tag)
-            env:
-              PORT: $(PORT)
 
           - task: Kubernetes@1
             name: get
@@ -140,15 +136,6 @@ stages:
           # Getting the IP of the deployed service and writing it to a variable for posing comment
           - script: |
               url="$(get.KubectlOutput)"
-              Write-Host "##vso[task.setvariable variable=CLIENT_ID;]$(CLIENT_ID)"
-              Write-Host "##vso[task.setvariable variable=CLIENT_SECRET;]$(CLIENT_SECRET)"
-              Write-Host "##vso[task.setvariable variable=REDIRECT_URL;]$(REDIRECT_URL)"
-              Write-Host "##vso[task.setvariable variable=PROFILE_URL;]$(PROFILE_URL)"
-              Write-Host "##vso[task.setvariable variable=MONGO_URI;]$(MONGO_URI)"
-              Write-Host "##vso[task.setvariable variable=API_URL;]$(API_URL)"
-              Write-Host "##vso[task.setvariable variable=JWT_SECRET;]$(JWT_SECRET)"
-              Write-Host "##vso[task.setvariable variable=API_VERSION;]$(API_VERSION)"
-              Write-Host "##vso[task.setvariable variable=PORT;]$(PORT)"
               message="Your review app has been deployed"
               if [ ! -z "$url" -a "$url" != "http://:" ]
               then
