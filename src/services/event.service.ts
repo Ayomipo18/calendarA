@@ -8,7 +8,7 @@ import { EventResponse, CreateEventDTO, UpdateEventDTO } from '../dtos/EventDTO'
 import { EventParameter } from '../helpers/ResourceParameter';
 import { LoggedInUser } from '../dtos/UserDTO';
 import { PagedResponse, Meta } from '../helpers/PagedResponse';
-import SuccessResponse from '../helpers/SuccessResponse';
+import SuccessResponse from '../helpers/successResponse';
 import { HttpException } from '../exceptions/HttpException';
 import { StatusCodes } from 'http-status-codes';
 import { Types } from 'mongoose';

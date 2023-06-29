@@ -1,4 +1,4 @@
-import SuccessResponse from "../../helpers/SuccessResponse";
+import SuccessResponse from "../../helpers/successResponse";
 import { UserLoginResponse } from "../../dtos/UserDTO";
 import { AuthDTO, AuthUrlResponse, AuthTokenDTO, AuthTokenResponse } from "../../dtos/AuthDTO";
 

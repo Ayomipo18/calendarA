@@ -6,7 +6,7 @@ import { injectable, inject } from "inversify";
 import jwt from 'jsonwebtoken';
 import { nanoid } from 'nanoid'
 import TYPES from '../di/types';
-import SuccessResponse from '../helpers/SuccessResponse';
+import SuccessResponse from '../helpers/successResponse';
 import logger from "../logger";
 import { HttpException } from '../exceptions/HttpException'
 import { oauth2Client, profileURL, jwt_secret } from '../config/config'

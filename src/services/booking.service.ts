@@ -5,7 +5,7 @@ import IRepositoryManager from '../repositories/interfaces/irepositoryManager';
 import { HttpException } from '../exceptions/HttpException'
 import { calendar, getOAuth2Client, googleApi } from '../config/config'
 import moment, { Moment } from 'moment';
-import SuccessResponse from '../helpers/SuccessResponse';
+import SuccessResponse from '../helpers/successResponse';
 import { 
     GetBookingDTO, 
     GetBookingResponse, 

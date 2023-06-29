@@ -2,7 +2,7 @@ import { PagedResponse } from "../../helpers/PagedResponse";
 import { CreateEventDTO, EventResponse, UpdateEventDTO } from "../../dtos/EventDTO";
 import { EventParameter } from "../../helpers/ResourceParameter";
 import { LoggedInUser } from "../../dtos/UserDTO";
-import SuccessResponse from "../../helpers/SuccessResponse";
+import SuccessResponse from "../../helpers/successResponse";
 
 export default interface IEventService {
     getAllEvents(eventParameters: EventParameter, loggedInUser: LoggedInUser): Promise<PagedResponse<Array<EventResponse>>>;

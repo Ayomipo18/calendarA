@@ -4,7 +4,7 @@ import {
     GetBookingResponse,
 } from "../../dtos/BookingDTO";
 import { MeetingResponse } from "../../dtos/MeetingDTO";
-import SuccessResponse from "../../helpers/SuccessResponse";
+import SuccessResponse from "../../helpers/successResponse";
 
 export default interface IBookingService {
     getAvailability(eventId: string, inputDate: GetBookingDTO): Promise<SuccessResponse<GetBookingResponse>>
