@@ -4,4 +4,3 @@ build
 logs
 calendara.yaml
 docker-compose.prod.yml
-package-lock.json
