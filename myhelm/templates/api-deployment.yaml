@@ -1,0 +1,68 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.api.name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.api.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.api.name }}
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: {{ .Values.api.name }}
+          image: {{ .Values.api.image.name }}
+          imagePullPolicy: Always
+          command: ["npm", "run", "start"]
+          ports:
+          - containerPort: {{ .Values.api.port }}
+          env:
+          - name: CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                key:  clientId
+                name: {{ .Values.api.name }}-auth
+          - name: CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                key:  clientSecret
+                name: {{ .Values.api.name }}-auth
+          - name: REDIRECT_URL
+            valueFrom:
+              secretKeyRef:
+                key:  redirectUrl
+                name: {{ .Values.api.name }}-auth
+          - name: PROFILE_URL
+            valueFrom:
+              secretKeyRef:
+                key:  profileUrl
+                name: {{ .Values.api.name }}-auth
+          - name: MONGO_URI
+            valueFrom:
+              secretKeyRef:
+                key:  mongoUri
+                name: {{ .Values.api.name }}-auth
+          - name: API_URL
+            valueFrom:
+              secretKeyRef:
+                key:  apiUrl
+                name: {{ .Values.api.name }}-auth
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                key:  jwtSecret
+                name: {{ .Values.api.name }}-auth
+          - name: API_VERSION
+            valueFrom:
+              secretKeyRef:
+                key:  apiVersion
+                name: {{ .Values.api.name }}-auth
+          - name: PORT
+            valueFrom:
+              secretKeyRef:
+                key:  port
+                name: {{ .Values.api.name }}-auth

@@ -1,0 +1,31 @@
+replicaCount: 1
+
+api:
+  name: calendara-api
+  port: 6822
+  image:
+    name: calendararegistry.azurecr.io/ayomipocalendara
+
+clientId: ClientId
+clientSecret: ClientSecret
+redirectUrl: RedirectUrl
+profileUrl: ProfileUrl
+mongoUri: .MongoUri
+apiUrl: ApiUrl
+jwtSecret: JwtSecret
+apiVersion: ApiVersion
+port: Port
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
