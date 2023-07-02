@@ -4,3 +4,4 @@ build
 logs
 calendara.yaml
 docker-compose.prod.yml
+troubleshooting_pod_description.txt

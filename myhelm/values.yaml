@@ -4,13 +4,13 @@ api:
   name: calendara-api
   port: 6822
   image:
-    name: calendararegistry.azurecr.io/ayomipocalendara
+    name: calendararegistry.azurecr.io/calendara-api:latest
 
 clientId: ClientId
 clientSecret: ClientSecret
 redirectUrl: RedirectUrl
 profileUrl: ProfileUrl
-mongoUri: .MongoUri
+mongoUri: MongoUri
 apiUrl: ApiUrl
 jwtSecret: JwtSecret
 apiVersion: ApiVersion
