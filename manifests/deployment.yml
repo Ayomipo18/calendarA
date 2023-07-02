@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: calendaraapi 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calendaraapi
+  template:
+    metadata:
+      labels:
+        app: calendaraapi 
+    spec:
+      containers:
+        - name: calendaraapi 
+          image: calendararegistry.azurecr.io/calendaraapi
+          ports:
+          - containerPort: 6822
