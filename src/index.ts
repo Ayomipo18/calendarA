@@ -59,7 +59,6 @@ app.get('/', (req, res) => {
 
 try {
   app.listen(PORT, async(): Promise<void> => {
-    console.log(process.env.MONGO_URI)
     await connectDB();
     logger.info(`Connected successfully on port ${config.port}`);
   });
