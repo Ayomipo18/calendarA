@@ -9,6 +9,8 @@ spec:
       app: {{ .Values.api.name }}
   template:
     metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
       labels:
         app: {{ .Values.api.name }}
     spec:
