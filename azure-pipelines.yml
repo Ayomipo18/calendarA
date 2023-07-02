@@ -15,7 +15,7 @@ variables:
   imageRepository: 'calendara-api'
   containerRegistry: 'calendararegistry.azurecr.io'
   dockerfilePath: '**/Dockerfile.prod'
-  tag: '$(Build.BuildId)'
+  tag: 'latest'
   imagePullSecret: 'calendararegistry9488ec59-auth'
 
   # Agent VM image name
