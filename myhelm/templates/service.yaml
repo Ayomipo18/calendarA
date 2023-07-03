@@ -4,6 +4,7 @@ metadata:
   name: {{ .Values.api.name }}
 spec:
   type: LoadBalancer
+  loadBalancerIP: {{ .Values.api.loadBalancer.ip }}
   ports:
   - port: {{ .Values.api.port }}
     targetPort: {{ .Values.api.port }}
