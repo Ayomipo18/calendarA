@@ -4,7 +4,7 @@ api:
   name: calendara-api
   port: 6822
   loadBalancer:
-    ip: 0000
+    ip: "0000"
   image:
     name: calendararegistry.azurecr.io/calendara-api:latest
 
