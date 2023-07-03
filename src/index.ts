@@ -65,3 +65,4 @@ try {
 } catch (error: any) {
     logger.error(`Error occurred: ${error}`);
 }
+
